@@ -26,3 +26,14 @@ def fasta_parse(fasta):
 			dic[prev_name] = seq
 	return dic
 
+'''
+Read in partition file
+'''
+
+def partition_parse(partition):
+	
+	name_array = []
+	length = []
+	for i in partition:
+		i=i.strip("\n")
+		print i
