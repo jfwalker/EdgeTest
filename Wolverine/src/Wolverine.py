@@ -5,8 +5,6 @@ import seq_utils
 
 '''
 Needs a supermatrix, a tree set
-
-
 '''
 
 def generate_argparser():
@@ -20,6 +18,8 @@ def generate_argparser():
 	List of trees to analyze, in default will estimate trees separately""")
 	parser.add_argument("-w", "--output_tree", required=False, type=str, help="""
 	Name for the output tree, default is EdgeTree.tre""")
+	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
+	Name for the output folder, default is output_folder""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
 	path to phyx, default is in path""")
 	parser.add_argument("-l", "--log_file", required=False, type=str, help="""
@@ -31,7 +31,7 @@ def generate_argparser():
 def main(arguments=None):
 	
 	FastaHash = {}
-	PartitionsHash = {}
+	PartitionHash = {}
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
@@ -50,6 +50,11 @@ def main(arguments=None):
 	else:
 		OutTree = "EdgeTree.tre"
 	
+	if args.output_folder:
+		OutFolder = args.output_folder
+	else:
+		OutFolder = "output_folder"
+		
 	if args.log_file:
 		outlog = args.log_file
 	else:
@@ -69,11 +74,13 @@ def main(arguments=None):
 	outf_log.write("Your Fasta file is " + args.supermatrix + "\n")
 	outf_log.write("Your Partition file is " + args.partition + "\n")
 	outf_log.write("Your Output tree file is " + OutTree + "\n")
+	outf_log.write("Your Output folder is " + OutFolder + "\n")
 	outf_log.write("Path to phyx is: " + phyx_loc + "\n")
 	
 	#Get the fasta into a hash
 	FastaHash = seq_utils.fasta_parse(fasta)
-	PartitionsHash = seq_utils.partition_parse(partition)
+	PartitionHash = seq_utils.partition_parse(partition)
+	print PartitionHash
 	
 
 if __name__ == "__main__":
