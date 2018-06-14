@@ -1,6 +1,7 @@
 import sys
 import argparse
-import os 
+import os
+import subprocess
 import seq_utils, Folder_utils
 
 '''
@@ -47,13 +48,22 @@ def main(arguments=None):
 	else:
 		phyx_loc = ""
 		
+	
+	if args.trees:
+		Trees = args.trees
+		cmd = ""
+		cmd = phyx_loc + "pxbp -t " + Trees + " -v"
+		print cmd
+		os.system(cmd)
+	else:
+		Trees = "Estimated here"
+		
 	if args.output_tree:
 		OutTree = args.output_tree
 	else:
 		OutTree = "EdgeTree.tre"
 		
 	if args.cut_off:
-	
 		Cutoff = args.cut_off
 	else:
 		Cutoff = 0
@@ -88,6 +98,7 @@ def main(arguments=None):
 	outf_log.write("####Basic Info About the Analysis####\n")
 	outf_log.write("Your Fasta file is " + args.supermatrix + "\n")
 	outf_log.write("Your Partition file is " + args.partition + "\n")
+	outf_log.write("Your Trees file is " + Trees + "\n")
 	outf_log.write("Your Output tree file is " + OutTree + "\n")
 	outf_log.write("Your Output folder is " + OutFolder + "\n")
 	outf_log.write("Path to phyx is: " + phyx_loc + "\n")

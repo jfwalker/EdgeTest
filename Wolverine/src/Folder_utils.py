@@ -1,5 +1,8 @@
 import sys,os
 
+"""
+Uses the parts file and the supermatrix to reverse concatenate
+"""
 def split_to_genes(fasta, part, folder, v):
 	
 	cmd = ""
@@ -13,6 +16,10 @@ def split_to_genes(fasta, part, folder, v):
 		len = part[i].split("-")
 		start = int(len[0]) - 1
 		stop = int(len[1])
+		outname = i + ".fa"
+		out = open(outname, "w")
 		for j in fasta:
-			#print fasta[j][len[0]:len[1]]
-			print ">" + j + "\n" + fasta[j][start:stop]
+			out.write(">" + j + "\n" + fasta[j][start:stop] + "\n")
+		cmd = ""
+		cmd = "mv " + i + ".fa " + folder + "/Fastas/"
+		os.system(cmd)

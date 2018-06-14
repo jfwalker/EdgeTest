@@ -1,2 +1,5 @@
-pxbp -h
 pxbp -t Test.tre
+pxbp -t Test.tre -v
+pxbp -t Test.tre -v
+pxbp -t Test.tre -v
+pxbp -t Test.tre -v
