@@ -11,19 +11,21 @@ def fasta_parse(fasta):
 	dic={}
 	seq=""
 	prev_name=""
+	count = 0
 	for i in fasta:
+	
 		i=i.strip("\n")
 		if i[0] == '>':
-
-			dic[prev_name]=seq
-			seq_list.append(seq)
-			name_list.append(i.strip(">"))
+			if count != 0:
+				dic[prev_name]=seq
+			
 			seq = ""
-			prev_name=i.strip(">")
+			prev_name = i.strip(">")
 		else:
 			seq += i.upper()
-			seqlength = len(seq)
-			dic[prev_name] = seq
+			
+		count += 1
+	dic[prev_name] = seq
 	return dic
 
 '''
