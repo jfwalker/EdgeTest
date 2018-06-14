@@ -1,5 +1,6 @@
-pxbp -t Test.tre
+pxbp -t tempbipart
+pxbp -t tempbipart
 pxbp -t Test.tre -v
-pxbp -t Test.tre -v
-pxbp -t Test.tre -v
+pxbp -t tempbipart
+pxbp -t tempbipart
 pxbp -t Test.tre -v

@@ -18,6 +18,7 @@ def fasta_parse(fasta):
 		if i[0] == '>':
 			if count != 0:
 				dic[prev_name]=seq
+				name_list.append(prev_name)
 			
 			seq = ""
 			prev_name = i.strip(">")
@@ -26,7 +27,8 @@ def fasta_parse(fasta):
 			
 		count += 1
 	dic[prev_name] = seq
-	return dic
+	name_list.append(prev_name)
+	return dic,name_list
 
 '''
 Read in partition file

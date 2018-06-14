@@ -2,7 +2,7 @@ import sys
 import argparse
 import os
 import subprocess
-import seq_utils, Folder_utils
+import seq_utils, Folder_utils, bipart_utils
 
 '''
 Needs a supermatrix, a tree set
@@ -35,6 +35,7 @@ def main(arguments=None):
 	
 	FastaHash = {}
 	PartitionHash = {}
+	name_list = []
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
@@ -42,6 +43,10 @@ def main(arguments=None):
 	#Get the info from arg parse
 	fasta = open(args.supermatrix, "r")
 	partition = open(args.partition, "r")
+	
+	#Get the fasta into a hash
+	FastaHash,name_list = seq_utils.fasta_parse(fasta)
+	PartitionHash = seq_utils.partition_parse(partition)
 	
 	if args.phyx_location:
 		phyx_loc = args.phyx_location
@@ -51,10 +56,8 @@ def main(arguments=None):
 	
 	if args.trees:
 		Trees = args.trees
-		cmd = ""
-		cmd = phyx_loc + "pxbp -t " + Trees + " -v"
-		print cmd
-		os.system(cmd)
+		bipart_utils.get_conflicts(phyx_loc, Trees, name_list)
+		
 	else:
 		Trees = "Estimated here"
 		
@@ -103,10 +106,6 @@ def main(arguments=None):
 	outf_log.write("Your Output folder is " + OutFolder + "\n")
 	outf_log.write("Path to phyx is: " + phyx_loc + "\n")
 	outf_log.write("Your cutoff is: " + str(Cutoff) + "\n")
-	
-	#Get the fasta into a hash
-	FastaHash = seq_utils.fasta_parse(fasta)
-	PartitionHash = seq_utils.partition_parse(partition)
 	
 	#Divide to genes
 	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
