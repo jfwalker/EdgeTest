@@ -36,6 +36,7 @@ def main(arguments=None):
 	FastaHash = {}
 	PartitionHash = {}
 	name_list = []
+	clade_of_i = []
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
@@ -52,14 +53,6 @@ def main(arguments=None):
 		phyx_loc = args.phyx_location
 	else:
 		phyx_loc = ""
-		
-	
-	if args.trees:
-		Trees = args.trees
-		bipart_utils.get_conflicts(phyx_loc, Trees, name_list)
-		
-	else:
-		Trees = "Estimated here"
 		
 	if args.output_tree:
 		OutTree = args.output_tree
@@ -81,6 +74,14 @@ def main(arguments=None):
 	else:
 		outlog = "log.log"
 	
+	if args.trees:
+		Trees = args.trees
+		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
+		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog)
+	else:
+		Trees = "Estimated here"
+		
+	
 	if args.verbosity:
 		print "Your log file is " + outlog
 		print "Your Fasta file is " + args.supermatrix
@@ -89,14 +90,14 @@ def main(arguments=None):
 		print "Path to phyx is: " + phyx_loc
 		print "Your Output folder is " + OutFolder
 		print "Your cutoff is: " + str(Cutoff)
-	
-	outf_log = open(outlog, "w")
-	
+	'''
+	outf_log = open(outlog, "a")
+	'''
 	#make output folder
 	cmd = ""
 	cmd = "mkdir " + OutFolder
 	os.system(cmd)
-	
+	'''
 	#Write some stuff out 
 	outf_log.write("####Basic Info About the Analysis####\n")
 	outf_log.write("Your Fasta file is " + args.supermatrix + "\n")
@@ -106,7 +107,7 @@ def main(arguments=None):
 	outf_log.write("Your Output folder is " + OutFolder + "\n")
 	outf_log.write("Path to phyx is: " + phyx_loc + "\n")
 	outf_log.write("Your cutoff is: " + str(Cutoff) + "\n")
-	
+	'''
 	#Divide to genes
 	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
 	
