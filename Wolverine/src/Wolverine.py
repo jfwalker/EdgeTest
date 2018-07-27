@@ -2,7 +2,7 @@ import sys
 import argparse
 import os
 import subprocess
-import seq_utils, Folder_utils, bipart_utils
+import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils
 
 '''
 Needs a supermatrix, a tree set
@@ -27,9 +27,9 @@ def generate_argparser():
 	Name of a log file to print things to, default is just logfile""")
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
 	Support value cutoff""")
-	parser.add_argument("-r", "--raxml", required=False, type=int, help="""
+	parser.add_argument("-r", "--raxml", required=False, type=str, help="""
 	Support value cutoff""")
-	parser.add_argument("-i", "--iqtree", required=False, type=int, help="""
+	parser.add_argument("-i", "--iqtree", required=False, type=str, help="""
 	Support value cutoff""")
 	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
 	How verbose should this be [1,2,3]""")
@@ -41,6 +41,7 @@ def main(arguments=None):
 	PartitionHash = {}
 	name_list = []
 	clade_of_i = []
+	clades_array = []
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
@@ -90,12 +91,12 @@ def main(arguments=None):
 		Trees = "Estimated here"
 	
 	if args.raxml:
-		RAxML = args.raxml
+		TreeEstimator = args.raxml
 	else:
 		print "you are using iqtree, if you did not specify iqtree this is likely why it crashed"
 		
 	if args.iqtree:
-		IQtree = args.iqtree
+		TreeEstimator = args.iqtree
 	else:
 		print "You are using raxml, if you did not specify raxml this is why it crashed"
 		
@@ -108,16 +109,18 @@ def main(arguments=None):
 		print "Path to phyx is: " + phyx_loc
 		print "Your Output folder is " + OutFolder
 		print "Your cutoff is: " + str(Cutoff)
-	'''
+	
+	TreeEstimator = "raxmlHPC"
 	outf_log = open(outlog, "a")
-	'''
+	
 	#make output folder
 	cmd = ""
 	cmd = "mkdir " + OutFolder
 	os.system(cmd)
-	'''
+	
 	#Write some stuff out 
 	outf_log.write("####Basic Info About the Analysis####\n")
+	outf_log.write("You are using " + TreeEstimator + "\n")
 	outf_log.write("Your Fasta file is " + args.supermatrix + "\n")
 	outf_log.write("Your Partition file is " + args.partition + "\n")
 	outf_log.write("Your Trees file is " + Trees + "\n")
@@ -125,9 +128,15 @@ def main(arguments=None):
 	outf_log.write("Your Output folder is " + OutFolder + "\n")
 	outf_log.write("Path to phyx is: " + phyx_loc + "\n")
 	outf_log.write("Your cutoff is: " + str(Cutoff) + "\n")
-	'''
+	
 	#Divide to genes
 	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
+	
+	
+	#start the analysis
+	if args.raxml:
+		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator)
+	
 	
 
 if __name__ == "__main__":

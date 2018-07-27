@@ -111,7 +111,6 @@ def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog):
 			count += 1
 	
 	
-	
 	outf_log.close()
 				
 
