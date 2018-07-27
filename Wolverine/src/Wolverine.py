@@ -27,6 +27,10 @@ def generate_argparser():
 	Name of a log file to print things to, default is just logfile""")
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
 	Support value cutoff""")
+	parser.add_argument("-r", "--raxml", required=False, type=int, help="""
+	Support value cutoff""")
+	parser.add_argument("-i", "--iqtree", required=False, type=int, help="""
+	Support value cutoff""")
 	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
 	How verbose should this be [1,2,3]""")
 	return parser
@@ -60,7 +64,11 @@ def main(arguments=None):
 		OutTree = "EdgeTree.tre"
 		
 	if args.cut_off:
-		Cutoff = args.cut_off
+		if args.trees:
+			Cutoff = args.cut_off
+		else:
+			print "You need to give trees for this"
+			exit
 	else:
 		Cutoff = 0
 			
@@ -80,6 +88,16 @@ def main(arguments=None):
 		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog)
 	else:
 		Trees = "Estimated here"
+	
+	if args.raxml:
+		RAxML = args.raxml
+	else:
+		print "you are using iqtree, if you did not specify iqtree this is likely why it crashed"
+		
+	if args.iqtree:
+		IQtree = args.iqtree
+	else:
+		print "You are using raxml, if you did not specify raxml this is why it crashed"
 		
 	
 	if args.verbosity:
