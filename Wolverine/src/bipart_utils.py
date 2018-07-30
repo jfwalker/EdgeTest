@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 import node
 import sys,os
 import subprocess
@@ -118,11 +120,21 @@ Is this repetive: yes
 Is this the best way: No
 Does this work: Seemingly
 '''		
-def get_clades(phyx_loc, Trees, name_list, arg, cutoff):
+def get_clades(phyx_loc, Trees, name_list, arg, cutoff, outdir):
 	
+	print "Making Constraints"
 	clade = []
 	clade_of_j = []
 	parts = []
+	clade_out = ""
+	clade_in = ""
+	HASH = {}
+	count = 0
+	newick = ""
+	
+	cmd = "mkdir " + outdir + "/constraints"
+	os.system(cmd)
+
 	cutoff = str(cutoff)
 	if arg:
 		cmd = phyx_loc + "pxbp -t " + Trees + " -c " + cutoff
@@ -133,13 +145,43 @@ def get_clades(phyx_loc, Trees, name_list, arg, cutoff):
 	x = p.communicate()[0].split("\n")
 	
 	for i in x:
+		HASH = {}
 		if i[0:5] == "CLADE":
 
 			parts = i.split("\t")
 			clade_of_j = parts[0].split(":")
 			clade = clade_of_j[1].split(" ")
 			clade[:] = [item for item in clade if item != '']
-			print clade
+			for g in clade:
+				HASH[g] = g
+			for g in name_list:
+				if g in HASH:
+					if clade_in == "":
+						clade_in = g
+					else:
+						clade_in = clade_in + "," + g
+				else:
+					clade_out = clade_out + "," + g
+			#print clade
+			newick = "((" + clade_in + ")" + clade_out + ");"
+			outname = "constraint_" + str(count)
+			#print outname
+			out = open(outname, "w")
+			out.write(newick + "\n")
+			cmd = ""
+			cmd = "mv " + outname + " " + outdir + "/constraints/"
+			print cmd
+			os.system(cmd)
+			clade_in = ""
+			clade_out = ""
+			count += 1
+			
+			
+				
+			
+			
+			#print "(☞ﾟヮﾟ)☞"
+			
 	
 '''
 	#Get the conflicts that match with the clade of interest

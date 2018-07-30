@@ -77,6 +77,9 @@ def main(arguments=None):
 		OutFolder = args.output_folder
 	else:
 		OutFolder = "output_folder"
+	cmd = ""
+	cmd = "mkdir " + OutFolder
+	os.system(cmd)	
 		
 	if args.log_file:
 		outlog = args.log_file
@@ -87,19 +90,20 @@ def main(arguments=None):
 		Trees = args.trees
 		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
 		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog)
-		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff)
+		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff, OutFolder)
 	else:
 		Trees = "Estimated here"
 	
+	TreeEstimator = "raxml-ng"
 	if args.raxml:
 		TreeEstimator = args.raxml
 	else:
-		print "you are using iqtree, if you did not specify iqtree this is likely why it crashed"
+		print "you are using iqtree, if you did not specify iqtree this is likely why it crashed, or defaulted to raxml-ng"
 		
 	if args.iqtree:
 		TreeEstimator = args.iqtree
 	else:
-		print "You are using raxml, if you did not specify raxml this is why it crashed"
+		print "You are using raxml, if you did not specify raxml this is why it crashed, or defaulted to raxml-ng"
 		
 	
 	if args.verbosity:
@@ -111,14 +115,14 @@ def main(arguments=None):
 		print "Your Output folder is " + OutFolder
 		print "Your cutoff is: " + str(Cutoff)
 	
-	TreeEstimator = "raxmlHPC"
 	outf_log = open(outlog, "a")
 	
+	'''
 	#make output folder
 	cmd = ""
 	cmd = "mkdir " + OutFolder
 	os.system(cmd)
-	
+	'''
 	#Write some stuff out 
 	outf_log.write("####Basic Info About the Analysis####\n")
 	outf_log.write("You are using " + TreeEstimator + "\n")
