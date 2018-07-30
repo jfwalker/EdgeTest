@@ -112,9 +112,35 @@ def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog):
 	
 	
 	outf_log.close()
-				
 
+'''
+Is this repetive: yes
+Is this the best way: No
+Does this work: Seemingly
+'''		
+def get_clades(phyx_loc, Trees, name_list, arg, cutoff):
+	
+	clade = []
+	clade_of_j = []
+	parts = []
+	cutoff = str(cutoff)
+	if arg:
+		cmd = phyx_loc + "pxbp -t " + Trees + " -c " + cutoff
+		print cmd
+	else:
+		cmd = phyx_loc + "pxbp -t " + Trees
+	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+	x = p.communicate()[0].split("\n")
+	
+	for i in x:
+		if i[0:5] == "CLADE":
 
+			parts = i.split("\t")
+			clade_of_j = parts[0].split(":")
+			clade = clade_of_j[1].split(" ")
+			clade[:] = [item for item in clade if item != '']
+			print clade
+	
 '''
 	#Get the conflicts that match with the clade of interest
 	cmd = ""

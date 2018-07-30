@@ -28,11 +28,11 @@ def generate_argparser():
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
 	Support value cutoff""")
 	parser.add_argument("-r", "--raxml", required=False, type=str, help="""
-	Support value cutoff""")
+	Location of raxml-ng""")
 	parser.add_argument("-i", "--iqtree", required=False, type=str, help="""
-	Support value cutoff""")
+	Location of iqtree (might not be added yet)""")
 	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
-	How verbose should this be [1,2,3]""")
+	Increase the verbosity""")
 	return parser
    
 def main(arguments=None):
@@ -87,6 +87,7 @@ def main(arguments=None):
 		Trees = args.trees
 		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
 		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog)
+		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff)
 	else:
 		Trees = "Estimated here"
 	
