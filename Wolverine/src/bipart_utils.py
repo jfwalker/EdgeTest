@@ -170,7 +170,7 @@ def get_clades(phyx_loc, Trees, name_list, arg, cutoff, outdir):
 			out.write(newick + "\n")
 			cmd = ""
 			cmd = "mv " + outname + " " + outdir + "/constraints/"
-			print cmd
+			#print cmd
 			os.system(cmd)
 			clade_in = ""
 			clade_out = ""

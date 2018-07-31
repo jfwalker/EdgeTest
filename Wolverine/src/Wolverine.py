@@ -140,7 +140,7 @@ def main(arguments=None):
 	
 	#start the analysis
 	if args.raxml:
-		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator)
+		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
 	
 	
 
