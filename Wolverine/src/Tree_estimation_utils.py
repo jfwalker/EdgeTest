@@ -26,6 +26,10 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	os.system(cmd)
 	LikeFile = OutFolder + "/Likelihoods.txt"
 	Likelihoods = open(LikeFile, "a")
+	#
+	
+	
+	
 
 
 	#Delete the list files
