@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import node
 import sys,os
 import subprocess
@@ -17,7 +18,7 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	#create header for the likelihood file
 	
 	rel = ""
-	rel2 = "GeneName"
+	rel2 = "GeneName\tNoRel"
 	const = open("ListofConstraints.templist", "r") 
 	for x in const:
 		x = x.strip("\n")
@@ -43,10 +44,22 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	for i in fastas:
 		gene = []
 		row = ""
+		free = ""
 		i = i.strip("\n")
 		gene = i.split("/")
 		gene = gene[2]
 		row = gene
+		
+		#Get with no constraint
+		cmd = ""
+		cmd = TreeProg + " --msa " + i + " --model GTR+G --prefix " + gene + " | grep \"Final LogLikelihood:\" "
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+		row = row + "\t" + t[1].strip("\n").strip(" ")
+		cmd2 = ""
+		cmd2 = "mv " + gene + ".* " + OutFolder + "/RaxmlLikelihoods/"
+		os.system(cmd2)		
+		
 		const = open("ListofConstraints.templist", "r")
 		for x in const:
 			x = x.strip("\n")
@@ -61,7 +74,7 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 			cmd2 = "mv " + prefix + ".* " + OutFolder + "/RaxmlLikelihoods/"
 			os.system(cmd2)
 			row = row + "\t" + t[1].strip("\n").strip(" ")
-		print row
+		print "(☞ﾟヮﾟ)☞\t" + gene
 		Likelihoods.write(row + "\n")
 			#print cmd
 			#os.system(cmd)
