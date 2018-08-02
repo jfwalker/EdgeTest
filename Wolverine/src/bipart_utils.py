@@ -74,7 +74,7 @@ def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog, cutoff
 	if cutoff == 0:
 		cmd = phyx_loc + "pxbp -t " + Trees + " -v"
 	else:
-		cmd = phyx_loc + "pxbp -t " + Trees + " -c " + cutoff + " -v"
+		cmd = phyx_loc + "pxbp -t " + Trees + " -c " + str(cutoff) + " -v"
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	x = p.communicate()[0].split("\n")
 	count = 0
