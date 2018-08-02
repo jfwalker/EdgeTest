@@ -52,7 +52,7 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 		
 		#Get with no constraint
 		cmd = ""
-		cmd = TreeProg + " --msa " + i + " --model GTR+G --prefix " + gene + " | grep \"Final LogLikelihood:\" "
+		cmd = TreeProg + " --msa " + i + " --model GTR+G --threads 4 --prefix " + gene + " | grep \"Final LogLikelihood:\" "
 		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 		t = p.communicate()[0].split(":")
 		row = row + "\t" + t[1].strip("\n").strip(" ")
@@ -67,7 +67,7 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 			const_name = const_name[2]
 			prefix = gene + "_" + const_name
 			cmd = ""
-			cmd = TreeProg + " -msa " + i + " --model GTR+G --tree-constraint " + x + " --prefix " + prefix + " | grep \"Final LogLikelihood:\" "
+			cmd = TreeProg + " -msa " + i + " --model GTR+G --threads 4 --tree-constraint " + x + " --prefix " + prefix + " | grep \"Final LogLikelihood:\" "
 			p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 			t = p.communicate()[0].split(":")
 			cmd2 = ""
