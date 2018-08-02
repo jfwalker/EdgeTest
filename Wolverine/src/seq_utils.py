@@ -43,7 +43,9 @@ def partition_parse(partition):
 		i=i.strip("\n")
 		length = i.split("=")
 		length[1] = length[1].strip(" ")
-		name_array = i.replace(",", " ").replace("=", " = ").split(" ")
-		name_array[1] = name_array[1].strip(" ")
+		#name_array = i.replace(",", " ").replace("=", " = ").split(" ")
+		i = i.replace(" ","").replace("=",",")
+		name_array = i.split(",")
+		print name_array[1]
 		part_hash[name_array[1]] = length[1]
 	return part_hash
