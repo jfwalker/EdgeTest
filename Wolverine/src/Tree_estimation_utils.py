@@ -34,22 +34,37 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	os.system(cmd)
 	LikeFile = OutFolder + "/Likelihoods.txt"
 	Likelihoods = open(LikeFile, "w")
-	Likelihoods.write(rel2)
+	Likelihoods.write(rel2 + "\n")
 	
 	#Process the likelihoods
 	prefix = ""
+	const_name = ""
 	fastas = open("ListofFastas.templist", "r")
 	for i in fastas:
-		i = i.split("\n")
-		i = i[0]
-		print i
+		gene = []
+		row = ""
+		i = i.strip("\n")
+		gene = i.split("/")
+		gene = gene[2]
+		row = gene
 		const = open("ListofConstraints.templist", "r")
 		for x in const:
 			x = x.strip("\n")
-			prefix = i + x
+			const_name = x.split("/")
+			const_name = const_name[2]
+			prefix = gene + "_" + const_name
 			cmd = ""
-			cmd = TreeProg + " -msa " + i + " --tree-constraint " + x + " --prefix " + prefix + " | grep \"Final\" "
-			os.system(cmd)
+			cmd = TreeProg + " -msa " + i + " --model GTR+G --tree-constraint " + x + " --prefix " + prefix + " | grep \"Final LogLikelihood:\" "
+			p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+			t = p.communicate()[0].split(":")
+			cmd2 = ""
+			cmd2 = "mv " + prefix + ".* " + OutFolder + "/RaxmlLikelihoods/"
+			os.system(cmd2)
+			row = row + "\t" + t[1].strip("\n").strip(" ")
+		print row
+		Likelihoods.write(row + "\n")
+			#print cmd
+			#os.system(cmd)
 	
 	
 	#Delete the list files
