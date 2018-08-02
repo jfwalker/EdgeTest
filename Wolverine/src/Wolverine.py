@@ -89,7 +89,7 @@ def main(arguments=None):
 	if args.trees:
 		Trees = args.trees
 		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
-		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog)
+		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff)
 		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff, OutFolder)
 	else:
 		Trees = "Estimated here"
@@ -141,7 +141,7 @@ def main(arguments=None):
 	#start the analysis
 	if args.raxml:
 		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
-	elif TreeBuilder == "raxml-ng":
+	elif TreeEstimator == "raxml-ng":
 		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
 	
 	
