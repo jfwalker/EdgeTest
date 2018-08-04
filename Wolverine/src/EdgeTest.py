@@ -87,6 +87,11 @@ def main(arguments=None):
 	if args.Threads:
 		Threads = args.Threads
 	
+	if args.raxml:
+		raxml = args.raxml
+	else:
+		raxml = "raxml-ng"
+	
 	#Tree data
 	Trees = args.trees
 	
@@ -108,7 +113,7 @@ def main(arguments=None):
 	edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
 
 	#Estimate all the likelihoods of each gene
-	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name, OutFolder)
+	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name, OutFolder, raxml, Threads)
 	
 	
 if __name__ == "__main__":

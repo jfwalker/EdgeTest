@@ -3,6 +3,7 @@ import node
 import sys,os
 import subprocess
 import tree_utils, tree_reader
+import bipart_utils
 
 def estimate_tree_raxml(TreeProg, OutFolder):
 	print "Estimating likelihoods using " + TreeProg
@@ -89,7 +90,7 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 '''
 Edge Estimation
 '''
-def estimate_edge(edge, all_species, genes, outfolder):
+def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 	
 	#edge is the relationship of interest
 	#all_species is the species each gene has
@@ -101,7 +102,13 @@ def estimate_edge(edge, all_species, genes, outfolder):
 	os.system(cmd)
 	LikeFile = outfolder + "/Likelihoods.txt"
 	Likelihoods = open(LikeFile, "w")
-		
+	
+	list_of_testable_species = outfolder + "/untestable.txt"
+	outfile_of_testable = open(list_of_testable_species, "w")
+	
+	constraint = ""
+	
+	
 	#Make a header
 	header = "GeneName"
 	for i in edge:
@@ -112,16 +119,31 @@ def estimate_edge(edge, all_species, genes, outfolder):
 	
 	Likelihoods.write(header + "\n")
 
-	#Iterates over genes
+	#Iterates over genes, relationship should match gene its on so that 
+	#uses a counter, line is the line to be printed
+	count = 0
 	input_gene_name = ""
+	line = ""
 	for i in genes:
 		input_gene_name = outfolder + "/Fastas/" + i + ".fa"
-		print input_gene_name			
+		line += i
 		#Make a likelihood estimation no constraint
-	
-	
-	
+		
 		#Make likelihoods with constraints implemented
+		for j in edge:
+			
+				constraint = bipart_utils.create_constraint(all_species[count], j, i)
+				if constraint == "false":
+					outfile_of_testable.write("no constraint used for: " + str(i) + " " + str(j) + "\n")
+					#run without constraint
+					print "No constraint"
+				else:
+					#run with constraint
+					print constraint
+		count += 1			
+	
+	
+	
 	
 	
 	

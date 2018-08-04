@@ -189,7 +189,81 @@ def get_clades(phyx_loc, Trees, name_list, arg, cutoff, outdir):
 			
 			
 			#print "(☞ﾟヮﾟ)☞"
-			
+
+'''
+Checks to see if an array of species (edge), contains the ability to
+test a relationship of interest (at least 2 species), this is not
+foolproof!!!! And needs work. This is basically so the constraint
+does not cause it to crash
+'''
+def testable_edge(species_list, edge):
+
+		match = set(species_list)
+		if len(match.intersection(edge)) < 2:
+			return "false"
+		else:
+			return "true"
+
+'''
+Actually assemble the constraint
+'''
+def make_constraint(sp_list,edge):
+	
+	ingroup = []
+	out_clade = ""
+	in_clade = "(("
+	pointless = ""
+	constraint = ""
+	HASH = {}
+	match = set(sp_list)
+	ingroup = match.intersection(edge)
+	
+	for i in ingroup:
+		HASH[i] = i
+		in_clade += i + ","
+	in_clade = in_clade[:-1]
+		
+	
+	for i in sp_list:
+		if i in HASH:
+			pointless = ""
+		else:
+			out_clade += "," + i
+	#print "Here is ingroup: " + in_clade
+	#print "Here is outgroup: " + out_clade
+	constraint = in_clade + ")" + out_clade + ")" + ";"
+	
+	#print "Here is the constraint: " + constraint
+	return constraint
+	
+	#for i in ingroup:
+	#	print i
+	
+
+'''
+Create constraints by taking a list of available species and the edge
+of interest
+'''
+def create_constraint(species_avail, edge, gene_name):
+	
+	
+	use_constraint = "true"
+	constraint = ""
+	
+	#Gene_name is the name of the gene
+	#Edge is an array of species in the edge of interest
+	#species avail is those that a constraint can be made out of
+	
+	#print "Gene: " + str(gene_name) + " ,Edge: " + str(edge) + " ,available species: " + str(species_avail)
+	use_constraint = testable_edge(species_avail, edge)
+	if use_constraint == "true":
+		constraint = make_constraint(species_avail, edge)
+		return constraint
+	else:
+		return "false"
+	
+	
+
 	
 '''
 	#Get the conflicts that match with the clade of interest
