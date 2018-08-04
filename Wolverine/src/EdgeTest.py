@@ -32,7 +32,7 @@ epilog=LICENSE)
 	parser.add_argument("-q", "--partition", required=True, type=str, help="""
 	Partition file, should be in RAxML readable format""")
 	parser.add_argument("-t", "--trees", required=True, type=str, help="""
-	List of trees to analyze, in default will estimate trees separately""")
+	List of trees to analyze for conflicts""")
 	parser.add_argument("-z", "--relationship", required=True, type=str, help="""
 	comma separated list of species in clade to test (Must be in first tree)""")
 	parser.add_argument("-i", "--relationship_file", required=False, action="count", default=0, help="""
