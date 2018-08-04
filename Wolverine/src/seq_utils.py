@@ -49,3 +49,7 @@ def partition_parse(partition):
 		#print name_array[1]
 		part_hash[name_array[1]] = length[1]
 	return part_hash
+
+def get_rel(rel):
+	for i in rel:
+		return i.strip("\n")

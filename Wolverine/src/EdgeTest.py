@@ -35,6 +35,10 @@ epilog=LICENSE)
 	List of trees to analyze, in default will estimate trees separately""")
 	parser.add_argument("-z", "--relationship", required=True, type=str, help="""
 	comma separated list of species in clade to test (Must be in first tree)""")
+	parser.add_argument("-i", "--relationship_file", required=False, action="count", default=0, help="""
+	flag to indicate that your comma separated list of species in clade to test 
+	is in a file (Must be in first tree), must be turned on if you are giving a
+	file and not a command line input of relationship""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder_EdgeTest""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
@@ -96,7 +100,11 @@ def main(arguments=None):
 	Trees = args.trees
 	
 	#Relationship of interest
-	relationship = args.relationship
+	if args.relationship_file:
+		test_rel = open(args.relationship, "r")
+		relationship = seq_utils.get_rel(test_rel)
+	else:
+		relationship = args.relationship
 	
 	#Create the folder of genes
 	#taxon_list: taxons in genes
