@@ -8,13 +8,22 @@ import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils
 Arguments
 '''
 
-LICENSE = "Quick disclaimer, this is the follow up to the MGWE program! Original publication:\nAnalyzing contentious relationships and outlier genes in phylogenomics\nThis is more efficient and explores a greater amount of tree space. As suggested in the MGWE manuscript this creates constraint files and analyzes those A similar procedure was implemented in the MS:\nNested phylogenetic conflicts and deep phylogenomics in plants\nFeel free to edit etc...but please don't steal credit for the code. For questions: jfwalker@umich.edu\n"
+LICENSE = """
+Quick disclaimer, this is the follow up to the MGWE program! This
+creates a constraint of all conflicts. Similar to the "Analyzing contentious
+relationships and outlier genes in phylogenomics"-Walker et al. 2018 paper 
+this is focused on an edge but uses a method more in the vain of "Nested 
+phylogenetic conflicts and deep phylogenomics in plants".-Smith et al. 2018              
+------------------------------------------------------------------------                                                              
+email: jfwalker@umich.edu
+"""
+
 
 def generate_argparser():
 
 	#parser = argparse.ArgumentParser()
 	parser = argparse.ArgumentParser(
-        prog="TdgeTest.py",
+        prog="EdgeTest.py",
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 epilog=LICENSE)
@@ -30,8 +39,12 @@ epilog=LICENSE)
 	Name for the output folder, default is output_folder_EdgeTest""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
 	path to phyx, default is in path""")
+	parser.add_argument("-d", "--Threads", required=False, type=str, help="""
+	default is 2""")
 	parser.add_argument("-r", "--raxml", required=False, type=str, help="""
 	Location of raxml-ng""")
+	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
+	Increase the verbosity""")
 	return parser
 
 def main(arguments=None):
@@ -39,8 +52,57 @@ def main(arguments=None):
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
-	print "Here"
+	
+	#necessary variables
+	FastaHash = []
+	PartitionHash = []
+	name_list = []
+	clade_of_i = []
+	Threads = "2"
+	Cutoff = 0
+	outlog = "conflicts"
+	
+	
+	#Get the info from arg parse
+	fasta = open(args.supermatrix, "r")
+	partition = open(args.partition, "r")
+	
+	#Get the fasta into a hash
+	FastaHash,name_list = seq_utils.fasta_parse(fasta)
+	PartitionHash = seq_utils.partition_parse(partition)
+	
+	if args.phyx_location:
+		phyx_loc = args.phyx_location
+	else:
+		phyx_loc = ""
+	
+	if args.output_folder:
+		OutFolder = args.output_folder
+	else:
+		OutFolder = "output_folder_EdgeTest"
+	cmd = ""
+	cmd = "mkdir " + OutFolder
+	os.system(cmd)
+	
+	if args.Threads:
+		Threads = args.Threads
+	
+	#Tree data
+	Trees = args.trees
+	
+	#Relationship of interest
+	relationship = args.relationship
+	
+	#Create the folder of genes
+	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
 
+	#Get Conflicts
+	temp = []
+	temp = relationship.split(",")
+	clade_of_i.append(temp)
+	bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff)
+	jobs =  int(Threads) / 2
+	print jobs
 
 
 
