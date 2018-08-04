@@ -56,13 +56,14 @@ def exist_check(clade,clade_of_i):
 '''
 Get conflicts with clade of interest
 '''
-def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog, cutoff):
+def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog, cutoff, just_edge):
 	
 	parts = []
 	clade_of_j = []
 	clade = []
 	con_clade = []
 	mix_clade = []
+	edges = []
 	clade_hash = {}
 	check = ""
 	names = []
@@ -90,6 +91,8 @@ def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog, cutoff
 				outf_log.write("Edge " + str(count) + " " + str(clade) + "\n")
 				for j in mix_clade:
 					outf_log.write("\tConflict " + str(j) + "\n")
+					if just_edge == "true":
+						edges.append(j)
 				count += 1
 			#print mix_clade
 			#print match
@@ -114,7 +117,9 @@ def conflict_with_clade_of_i(clade_of_i,phyx_loc,Trees,name_list, outlog, cutoff
 		if check == "false":
 			outf_log.write("Edge " + str(count) + " " + str(x) + "\n")
 			count += 1
-	
+		if just_edge == "true":
+			edges.append(x)
+	return edges
 	
 	outf_log.close()
 

@@ -100,7 +100,10 @@ def main(arguments=None):
 	temp = []
 	temp = relationship.split(",")
 	clade_of_i.append(temp)
-	bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff)
+	just_edge = "true"
+	edges = []
+	edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
+	print edges
 	jobs =  int(Threads) / 2
 	print jobs
 

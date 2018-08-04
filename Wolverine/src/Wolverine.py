@@ -42,6 +42,7 @@ def main(arguments=None):
 	name_list = []
 	clade_of_i = []
 	clades_array = []
+	unused = []
 	parser = generate_argparser()
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
@@ -89,7 +90,8 @@ def main(arguments=None):
 	if args.trees:
 		Trees = args.trees
 		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
-		bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff)
+		just_edge = "false"
+		unused = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
 		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff, OutFolder)
 	else:
 		Trees = "Estimated here"
