@@ -39,6 +39,8 @@ epilog=LICENSE)
 	flag to indicate that your comma separated list of species in clade to test 
 	is in a file (Must be in first tree), must be turned on if you are giving a
 	file and not a command line input of relationship""")
+	parser.add_argument("-o", "--only_specified", required=False, action="count", default=0, help="""
+	No conflict identification test only the list csv list of relationships""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder_EdgeTest""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
@@ -102,7 +104,8 @@ def main(arguments=None):
 	#Relationship of interest
 	if args.relationship_file:
 		test_rel = open(args.relationship, "r")
-		relationship = seq_utils.get_rel(test_rel)
+		relationship2 = seq_utils.get_rel(test_rel)
+		relationship = relationship2[0]
 	else:
 		relationship = args.relationship
 	
@@ -111,16 +114,25 @@ def main(arguments=None):
 	#gene_name: name of genes
 	
 	taxon_list, gene_name = Folder_utils.split_to_genes_edge(FastaHash,PartitionHash,OutFolder,args.verbosity)
-
-	#Get Conflicts
-	temp = []
-	temp = relationship.split(",")
-	clade_of_i.append(temp)
-	just_edge = "true"
-	edges = []
-	edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
+		
+	if args.only_specified:
+		temp_rel = []
+		edges = []
+		for j in relationship2:
+			temp_rel = j.split(",")
+			edges.append(temp_rel)
+		print edges
+	else:
+		#Get Conflicts
+		temp = []
+		temp = relationship.split(",")
+		clade_of_i.append(temp)
+		just_edge = "true"
+		edges = []
+		edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
 
 	#Estimate all the likelihoods of each gene
+	print edges
 	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name, OutFolder, raxml, Threads)
 	
 	#Summarize the data

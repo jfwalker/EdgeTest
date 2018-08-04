@@ -51,5 +51,7 @@ def partition_parse(partition):
 	return part_hash
 
 def get_rel(rel):
+	temp = []
 	for i in rel:
-		return i.strip("\n")
+		temp.append(i.strip("\n"))
+	return temp
