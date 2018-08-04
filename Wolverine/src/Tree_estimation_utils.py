@@ -84,3 +84,16 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	cmd = ""
 	cmd = "rm ListofFastas.templist ListofConstraints.templist"
 	os.system(cmd)
+	
+
+'''
+Edge Estimation
+'''
+def estimate_edge(edge, all_species, genes):
+	print edge
+	print all_species
+	print genes
+	
+	
+	
+	

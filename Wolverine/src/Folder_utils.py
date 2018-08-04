@@ -30,6 +30,8 @@ incorporate AA's
 '''
 def	split_to_genes_edge(fasta, part, folder, v):
 	
+	taxa_content = []
+	gene_names = []
 	cmd = ""
 	cmd = "mkdir " + folder + "/Fastas"
 	os.system(cmd)
@@ -46,6 +48,7 @@ def	split_to_genes_edge(fasta, part, folder, v):
 		outname = i + ".fa"
 		count = stop - start
 		out = open(outname, "w")
+		species_list = []
 		for j in fasta:
 			missing_count = 0
 			for t in range(start, stop):
@@ -59,6 +62,10 @@ def	split_to_genes_edge(fasta, part, folder, v):
 				putout.write("Deleted: " + j + " " + i + "\n")
 			else:
 				out.write(">" + j + "\n" + fasta[j][start:stop] + "\n")
+				species_list.append(j)
+		taxa_content.append(species_list)
+		gene_names.append(j)
 		cmd = ""
 		cmd = "mv " + i + ".fa " + folder + "/Fastas/"
 		os.system(cmd)
+	return taxa_content, gene_names

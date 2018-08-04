@@ -60,7 +60,6 @@ def main(arguments=None):
 	clade_of_i = []
 	Threads = "2"
 	Cutoff = 0
-	outlog = "conflicts"
 	
 	
 	#Get the info from arg parse
@@ -83,6 +82,7 @@ def main(arguments=None):
 	cmd = ""
 	cmd = "mkdir " + OutFolder
 	os.system(cmd)
+	outlog = OutFolder + "/conflicts.txt"
 	
 	if args.Threads:
 		Threads = args.Threads
@@ -94,7 +94,10 @@ def main(arguments=None):
 	relationship = args.relationship
 	
 	#Create the folder of genes
-	Folder_utils.split_to_genes_edge(FastaHash,PartitionHash,OutFolder,args.verbosity)
+	#taxon_list: taxons in genes
+	#gene_name: name of genes
+	
+	taxon_list, gene_name = Folder_utils.split_to_genes_edge(FastaHash,PartitionHash,OutFolder,args.verbosity)
 
 	#Get Conflicts
 	temp = []
@@ -105,7 +108,7 @@ def main(arguments=None):
 	edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
 
 	#Estimate all the likelihoods of each gene
-	
+	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name)
 	
 	
 if __name__ == "__main__":
