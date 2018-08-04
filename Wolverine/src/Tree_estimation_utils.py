@@ -102,16 +102,17 @@ def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 	os.system(cmd2)
 	return t[3].strip("\n").strip(" ")
 
-def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count):	
+def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_name_const):	
 
 	cmd = ""
-	cmd = raxml + " --msa " + input_gene + " --tree-constraint temp_const" + " --model GTR+G --threads 4 --prefix " + gene_name + str(count) + " | grep \"nothing\""
+	cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --model GTR+G --threads 4 --prefix " + gene_name + str(count) + " | grep \"nothing\""
 	os.system(cmd)
 	cmd = ""
-	cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + ".raxml.bestTree" + " --model GTR+G --threads 4 --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
+	cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + str(count) + ".raxml.bestTree" + " --model GTR+G --threads 4 --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split(":")
-	cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
+	#print t
+	cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
 	os.system(cmd2)
 	return t[3].strip("\n").strip(" ")
 
@@ -128,6 +129,9 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 	cmd = ""
 	cmd = "mkdir " + outfolder + "/RaxmlLikelihoods/"
 	os.system(cmd)
+	cmd = ""
+	cmd = "mkdir " + outfolder + "/ConstraintsUsed/"
+	os.system(cmd)
 	LikeFile = outfolder + "/Likelihoods.txt"
 	Likelihoods = open(LikeFile, "w")
 	
@@ -138,7 +142,7 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 	
 	
 	#Make a header
-	header = "GeneName"
+	header = "GeneName\tNoConstraint"
 	for i in edge:
 		rel = ""
 		for j in i:
@@ -150,34 +154,42 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 	#Iterates over genes, relationship should match gene its on so that 
 	#uses a counter, line is the line to be printed
 	count = 0
+	edge_count = 0
 	input_gene_name = ""
 	line = ""
 	no_const_likely = ""
 	const_likely = ""
 	for i in genes:
+		line = ""
 		input_gene_name = outfolder + "/Fastas/" + i + ".fa"
 		line += i
 		#Make a likelihood estimation no constraint
 		no_const_likely = run_ng_no_const(raxml, Threads, i, input_gene_name, outfolder)
-		print no_const_likely
-		
+		line += "\t" + no_const_likely
+		#print no_const_likely
+		edge_count = 0
 		#Make likelihoods with constraints implemented
 		for j in edge:
-			
+				
+
 				constraint = bipart_utils.create_constraint(all_species[count], j, i)
+				file_name_const = str(i) + str(edge_count) + ".tre"
 				if constraint == "false":
-					outfile_of_testable.write("no constraint used for: " + str(i) + " " + str(j) + "\n")
+					outfile_of_testable.write("no constraint used for: " + str(i) + str(edge_count) + " " + str(j) + "\n")
 					#Don't rerun raxml just use the one without the constraint
-					line += no_const_likely
+					line += "\t" + no_const_likely
 				else:
 					#run with constraint
-					print constraint
-					Const_file = open("temp_const", "w")
+					#print constraint
+					Const_file = open(file_name_const, "w")
 					Const_file.write(constraint)
-					const_likely = run_ng_const(raxml, Threads, i, input_gene_name, outfolder, count)
-					print const_likely
-				count += 1
-					
+					Const_file.close()
+					const_likely = run_ng_const(raxml, Threads, i, input_gene_name, outfolder, edge_count, file_name_const)
+					line += "\t" + const_likely
+					#print const_likely
+				edge_count += 1
+		print "(☞ﾟヮﾟ)☞\t" + i
+		Likelihoods.write(line + "\n")	
 					
 		count += 1			
 	
