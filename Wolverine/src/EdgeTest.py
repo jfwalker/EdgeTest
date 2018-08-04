@@ -94,7 +94,7 @@ def main(arguments=None):
 	relationship = args.relationship
 	
 	#Create the folder of genes
-	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
+	Folder_utils.split_to_genes_edge(FastaHash,PartitionHash,OutFolder,args.verbosity)
 
 	#Get Conflicts
 	temp = []
@@ -103,11 +103,10 @@ def main(arguments=None):
 	just_edge = "true"
 	edges = []
 	edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
-	print edges
-	jobs =  int(Threads) / 2
-	print jobs
 
-
-
+	#Estimate all the likelihoods of each gene
+	
+	
+	
 if __name__ == "__main__":
 	main()

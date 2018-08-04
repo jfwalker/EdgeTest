@@ -23,3 +23,42 @@ def split_to_genes(fasta, part, folder, v):
 		cmd = ""
 		cmd = "mv " + i + ".fa " + folder + "/Fastas/"
 		os.system(cmd)
+		
+'''
+Same as above but factors in conflict, for nucleotides but easy edit to
+incorporate AA's
+'''
+def	split_to_genes_edge(fasta, part, folder, v):
+	
+	cmd = ""
+	cmd = "mkdir " + folder + "/Fastas"
+	os.system(cmd)
+	if v:
+		print "Dividing into folders"
+	outfile = folder + "/DeletedTaxa.txt"
+	putout = open(outfile, "w")
+	count = 0
+	len = []
+	for i in part:
+		len = part[i].split("-")
+		start = int(len[0]) - 1
+		stop = int(len[1])
+		outname = i + ".fa"
+		count = stop - start
+		out = open(outname, "w")
+		for j in fasta:
+			missing_count = 0
+			for t in range(start, stop):
+				if fasta[j][t] == "-":
+					missing_count += 1
+				elif fasta[j][t] == "N":
+					missing_count += 1
+			if missing_count == count:
+				if v:
+					print "Deleted: " + j + " " + i
+				putout.write("Deleted: " + j + " " + i + "\n")
+			else:
+				out.write(">" + j + "\n" + fasta[j][start:stop] + "\n")
+		cmd = ""
+		cmd = "mv " + i + ".fa " + folder + "/Fastas/"
+		os.system(cmd)
