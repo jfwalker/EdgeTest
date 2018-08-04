@@ -86,6 +86,34 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	cmd = "rm ListofFastas.templist ListofConstraints.templist"
 	os.system(cmd)
 	
+'''
+Runs raxml with no constraint
+'''
+def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
+	
+	cmd = ""
+	cmd = raxml + " --msa " + input_gene + " --model GTR+G --threads 4 --prefix " + gene_name + " | grep \"nothing\""
+	os.system(cmd)
+	cmd = ""
+	cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + ".raxml.bestTree" + " --model GTR+G --threads 4 --prefix " + "revaluated_" + gene_name + " | grep \"final logLikelihood:\""
+	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+	t = p.communicate()[0].split(":")
+	cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
+	os.system(cmd2)
+	return t[3].strip("\n").strip(" ")
+
+def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count):	
+
+	cmd = ""
+	cmd = raxml + " --msa " + input_gene + " --tree-constraint temp_const" + " --model GTR+G --threads 4 --prefix " + gene_name + str(count) + " | grep \"nothing\""
+	os.system(cmd)
+	cmd = ""
+	cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + ".raxml.bestTree" + " --model GTR+G --threads 4 --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
+	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+	t = p.communicate()[0].split(":")
+	cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
+	os.system(cmd2)
+	return t[3].strip("\n").strip(" ")
 
 '''
 Edge Estimation
@@ -124,10 +152,14 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 	count = 0
 	input_gene_name = ""
 	line = ""
+	no_const_likely = ""
+	const_likely = ""
 	for i in genes:
 		input_gene_name = outfolder + "/Fastas/" + i + ".fa"
 		line += i
 		#Make a likelihood estimation no constraint
+		no_const_likely = run_ng_no_const(raxml, Threads, i, input_gene_name, outfolder)
+		print no_const_likely
 		
 		#Make likelihoods with constraints implemented
 		for j in edge:
@@ -135,11 +167,18 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 				constraint = bipart_utils.create_constraint(all_species[count], j, i)
 				if constraint == "false":
 					outfile_of_testable.write("no constraint used for: " + str(i) + " " + str(j) + "\n")
-					#run without constraint
-					print "No constraint"
+					#Don't rerun raxml just use the one without the constraint
+					line += no_const_likely
 				else:
 					#run with constraint
 					print constraint
+					Const_file = open("temp_const", "w")
+					Const_file.write(constraint)
+					const_likely = run_ng_const(raxml, Threads, i, input_gene_name, outfolder, count)
+					print const_likely
+				count += 1
+					
+					
 		count += 1			
 	
 	
