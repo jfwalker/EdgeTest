@@ -123,6 +123,11 @@ def main(arguments=None):
 	#Estimate all the likelihoods of each gene
 	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name, OutFolder, raxml, Threads)
 	
+	#Summarize the data
+	
+	#types of summaries (total likelihood of edges), diff between edges,
+	#genes that are 2lnl greater in likelihood
+	
 	
 if __name__ == "__main__":
 	main()

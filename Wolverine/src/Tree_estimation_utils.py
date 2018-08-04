@@ -88,30 +88,38 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 	
 '''
 Runs raxml with no constraint
+Possible to do evaluate with a small edit of uncommenting but evaluate
+seems a bit screwy right now
 '''
 def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 	
 	cmd = ""
-	cmd = raxml + " --msa " + input_gene + " --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"nothing\""
-	os.system(cmd)
-	cmd = ""
-	cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + ".raxml.bestTree" + " --model GTR+G --threads " + str(Threads) + " --prefix " + "revaluated_" + gene_name + " | grep \"final logLikelihood:\""
+	#cmd = raxml + " --msa " + input_gene + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
+	cmd = raxml + " --msa " + input_gene + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
+
+	#print cmd
+	#os.system(cmd)
+	#cmd = ""
+	#cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + ".raxml.bestTree --lh-epsilon 0.00001 --blopt nr_safe" + " --model GTR+G --threads " + str(Threads) + " --prefix " + "revaluated_" + gene_name + " | grep \"final logLikelihood:\""
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split(":")
+	#print t
 	cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
 	os.system(cmd2)
 	if len(t) == 1:
 		print "RAxML did not run, probably too many threads"
 		sys.exit()
-	return t[3].strip("\n").strip(" ")
+	#change to three for evaluate
+	return t[1].strip("\n").strip(" ")
 
 def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_name_const):	
 
 	cmd = ""
-	cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"nothing\""
-	os.system(cmd)
-	cmd = ""
-	cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + str(count) + ".raxml.bestTree" + " --model GTR+G --threads " + str(Threads) + " --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
+	#cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+	cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+	#os.system(cmd)
+	#cmd = ""
+	#cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + str(count) + ".raxml.bestTree --lh-epsilon 0.00001 --blopt nr_safe" + " --model GTR+G --threads " + str(Threads) + " --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split(":")
 	#print t
@@ -120,7 +128,7 @@ def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_n
 	if len(t) == 1:
 		print "RAxML did not run, probably too many threads"
 		sys.exit()
-	return t[3].strip("\n").strip(" ")
+	return t[1].strip("\n").strip(" ")
 
 '''
 Edge Estimation
@@ -194,7 +202,7 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 					line += "\t" + const_likely
 					#print const_likely
 				edge_count += 1
-		#print line
+		print line
 		print "(☞ﾟヮﾟ)☞\t" + i
 		Likelihoods.write(line + "\n")	
 					
