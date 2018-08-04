@@ -108,7 +108,7 @@ def main(arguments=None):
 	edges = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
 
 	#Estimate all the likelihoods of each gene
-	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name)
+	Tree_estimation_utils.estimate_edge(edges, taxon_list, gene_name, OutFolder)
 	
 	
 if __name__ == "__main__":

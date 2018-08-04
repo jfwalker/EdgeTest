@@ -64,7 +64,7 @@ def	split_to_genes_edge(fasta, part, folder, v):
 				out.write(">" + j + "\n" + fasta[j][start:stop] + "\n")
 				species_list.append(j)
 		taxa_content.append(species_list)
-		gene_names.append(j)
+		gene_names.append(i)
 		cmd = ""
 		cmd = "mv " + i + ".fa " + folder + "/Fastas/"
 		os.system(cmd)

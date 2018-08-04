@@ -89,10 +89,40 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 '''
 Edge Estimation
 '''
-def estimate_edge(edge, all_species, genes):
-	print edge
-	print all_species
-	print genes
+def estimate_edge(edge, all_species, genes, outfolder):
+	
+	#edge is the relationship of interest
+	#all_species is the species each gene has
+	#genes is the names of the genes
+	
+	#Create folder for raxml likelihoods to be output to and file for them
+	cmd = ""
+	cmd = "mkdir " + outfolder + "/RaxmlLikelihoods/"
+	os.system(cmd)
+	LikeFile = outfolder + "/Likelihoods.txt"
+	Likelihoods = open(LikeFile, "w")
+		
+	#Make a header
+	header = "GeneName"
+	for i in edge:
+		rel = ""
+		for j in i:
+			rel += j + ","
+		header += "\t" + rel
+	
+	Likelihoods.write(header + "\n")
+
+	#Iterates over genes
+	input_gene_name = ""
+	for i in genes:
+		input_gene_name = outfolder + "/Fastas/" + i + ".fa"
+		print input_gene_name			
+		#Make a likelihood estimation no constraint
+	
+	
+	
+		#Make likelihoods with constraints implemented
+	
 	
 	
 	
