@@ -1,7 +1,8 @@
 '''
 This is a set of ways to summarize the data
 Logic behind a separate program is so that you're forced
-to think about the analysis you are doing
+to think about the analysis you are doing. So please only
+choose one option at a time
 '''
 import sys
 import argparse
@@ -12,7 +13,7 @@ import file_utils,Summary_utils
 
 LICENSE = """
 The reason only one will work at once is to
-avoid an overload of results.             
+avoid an overload of results.           
 ------------------------------------------------------------------------                                                              
 email: jfwalker@umich.edu
 """
@@ -33,6 +34,8 @@ def generate_argparser():
 	Get the likelihood penalty each relationship imposes""")
 	parser.add_argument("-l", "--l_diff", required=False, type=str, help="""
 	Gets the likelihood difference each gene is from the no constraint""")
+	parser.add_argument("-c", "--consensus_tree", required=False,action="count", default=0, help="""
+	This is for if you have run wolverine, assembles a consensus tree from the relationships""")
 	parser.add_argument("-r", "--relationship_file", required=False, action="count", default=0, help="""
 	prints out a file with all the relationships""")
 	return parser
@@ -74,7 +77,7 @@ def main(arguments=None):
 		for i in range(0,len(names)):
 			penalty = values[0] - values[i]
 			print "Relationship: " + names[i] + "\t" + str(penalty)
-		
+		sys.exit()
 
 	
 	

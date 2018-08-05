@@ -12,7 +12,7 @@ def get_best(like_file):
 	
 	HASH = {}
 	#make an array of floats
-	sum_array = [0.0] * len(like_file[1:])
+	sum_array = [0.0] * len(like_file[0][1:])
 	header_array = like_file[0][1:]
 	#first line is the header so f that
 	for i in like_file[1:]:
@@ -21,6 +21,8 @@ def get_best(like_file):
 		for j in i[1:]:
 			sum_array[count] += float(j)
 			count += 1
+	#print sum_array
+	#print header_array
 	for i in range(0,len(sum_array)):
 		HASH[header_array[i]] = sum_array[i]
 	return HASH
