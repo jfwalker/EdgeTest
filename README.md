@@ -6,7 +6,8 @@ There should be a lot more coming shortly
 
 ### August 4th, EdgeTest.py has working early version
 
-This is the constraint version of the MGWE method (it explores more tree space): 
+This is the constraint version of the MGWE method (this version explores more tree space):
+
 SysBio: [Analyzing contentious relationships and outlier genes in phylogenomics](https://academic.oup.com/sysbio/advance-article/doi/10.1093/sysbio/syy043/5034973)
 
 I will be updating this for edge based analyses from now on
