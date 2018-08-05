@@ -32,7 +32,7 @@ def generate_argparser():
 	Checks for the best relationship among all""")
 	parser.add_argument("-p", "--penalty_rel", required=False,action="count", default=0, help="""
 	Get the likelihood penalty each relationship imposes""")
-	parser.add_argument("-l", "--l_diff", required=False, type=str, help="""
+	parser.add_argument("-l", "--l_diff", required=False,action="count", default=0, help="""
 	Gets the likelihood difference each gene is from the no constraint""")
 	parser.add_argument("-r", "--relationship_file", required=False, action="count", default=0, help="""
 	prints out a file with all the relationships""")
@@ -76,7 +76,19 @@ def main(arguments=None):
 			penalty = values[0] - values[i]
 			print "Relationship: " + names[i] + "\t" + str(penalty)
 		sys.exit()
-
+	
+	if args.l_diff:
+		
+		like_dif = []
+		#Need an over haul
+		like_dif = Summary_utils.get_like_dif(likelihood_file)
+		for i in like_dif:
+			temp = ""
+			for j in i:
+				temp = temp + str(j) + "\t"
+			print temp
+			
+		sys.exit()
 	
 	
 if __name__ == "__main__":

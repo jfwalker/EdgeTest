@@ -27,3 +27,20 @@ def get_best(like_file):
 		HASH[header_array[i]] = sum_array[i]
 	return HASH
 
+'''
+Changes your matrix into the difference between the first data column and 
+the next few rows
+'''
+def get_like_dif(like_array):
+
+	diff_array = []
+	diff = 0.0
+	diff_array.append(like_array[0])
+	for i in like_array[1:]:
+		new_row = []
+		new_row.append(i[0])
+		for j in i[1:]:
+			diff = float(i[1]) - float(j)
+			new_row.append(diff)
+		diff_array.append(new_row)
+	return diff_array
