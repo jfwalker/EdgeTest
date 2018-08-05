@@ -61,3 +61,10 @@ untestable.txt: This is when a constraint could not be made for a certain relati
 
 DeletedTaxa.txt: This is a list of taxa that were not present in a gene, for book keeping.
 conflicts.txt: This is created if you have pxbp identify conflicts against your clade of interest
+
+
+### Summarizing the data
+
+There is a lot more you can do with this, and more developments to come soon but right now I have a basic summary that will list your relationships in order of likelihood. This is assuming you've already run the edge tester
+
+EX: `python src/EdgeSummarizer.py -i output_folder_EdgeTest/Likelihoods.txt -b`
