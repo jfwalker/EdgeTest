@@ -34,8 +34,6 @@ def generate_argparser():
 	Get the likelihood penalty each relationship imposes""")
 	parser.add_argument("-l", "--l_diff", required=False, type=str, help="""
 	Gets the likelihood difference each gene is from the no constraint""")
-	parser.add_argument("-c", "--consensus_tree", required=False,action="count", default=0, help="""
-	This is for if you have run wolverine, assembles a consensus tree from the relationships""")
 	parser.add_argument("-r", "--relationship_file", required=False, action="count", default=0, help="""
 	prints out a file with all the relationships""")
 	return parser

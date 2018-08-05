@@ -1,3 +1,8 @@
+'''
+This performs an exhaustive edge search and creates a log file for summarizing
+to a tree. The program SummerTree.py can create the consensus tree(s) underlying
+your data.
+'''
 import sys
 import argparse
 import os
@@ -8,17 +13,31 @@ import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils
 Needs a supermatrix, a tree set
 '''
 
-def generate_argparser():
+LICENSE = """
+Feel free to use manipulate but please don't take credit for the code.
+It's pretty sloppy and full of false laziness so I don't know why you
+would want to take credit for it, but again please don't.     
+------------------------------------------------------------------------                                                              
+email: jfwalker@umich.edu
+"""
 
-	parser = argparse.ArgumentParser()
+
+def generate_argparser():
+	
+	parser = argparse.ArgumentParser(
+        prog="EdgeSummarizer.py",
+        description=__doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+		epilog=LICENSE)
 	parser.add_argument("-s", "--supermatrix", required=True, type=str, help="""
 	Supermatrix file in fasta, if not fasts use pxs2fa from the phyx package""")
 	parser.add_argument("-q", "--partition", required=True, type=str, help="""
 	Partition file, should be in RAxML readable format""")
 	parser.add_argument("-t", "--trees", required=False, type=str, help="""
 	List of trees to analyze, in default will estimate trees separately""")
-	parser.add_argument("-w", "--output_tree", required=False, type=str, help="""
-	Name for the output tree, default is EdgeTree.tre""")
+	parser.add_argument("-m", "--missing", required=False, type=str, help="""
+	Analyze with missing data, uses clades identified and not conflict, so also
+	a good idea to do for an exhaustive edge search""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
