@@ -34,8 +34,10 @@ def generate_argparser():
 	Get the likelihood penalty each relationship imposes""")
 	parser.add_argument("-l", "--l_diff", required=False,action="count", default=0, help="""
 	Gets the likelihood difference each gene is from the no constraint""")
-	parser.add_argument("-r", "--relationship_file", required=False, action="count", default=0, help="""
-	prints out a file with all the relationships""")
+	parser.add_argument("-s", "--stat_diff", required=False, type=float, help="""
+	If used you must specify a log likelihood difference, recommended is two. Will output a
+	new matrix where 1 represents genes that are statistically significantly worse that having
+	no constraint based on your specified cutoff and 0 represents those that are""")
 	return parser
 	
 	
@@ -86,10 +88,37 @@ def main(arguments=None):
 			temp = ""
 			for j in i:
 				temp = temp + str(j) + "\t"
-			print temp
-			
+			print temp		
 		sys.exit()
 	
+	#This reaches a level of non-elegant impressive for even me
+	if args.stat_diff:
+		
+		req_dif = args.stat_diff
+		like_dif = []
+		#Need an over haul
+		like_dif = Summary_utils.get_like_dif(likelihood_file)
+		sum_array = [0] * len(like_dif[0][1:])
+		temp = ""
+		for i in like_dif[0]:
+			temp = temp + str(i) + "\t"
+		print temp	
+		for i in like_dif[1:]:
+			temp = str(i[0]) + "\t"
+			count = 0
+			for j in i[1:]:
+				if( j >= float(req_dif)):
+					temp = temp + str(1) + "\t"
+					sum_array[count] += 1
+				else:
+					temp = temp + str(0) + "\t"
+				count += 1
+			print temp
+		temp = "Total\t"
+		for i in sum_array:
+			temp = temp + str(i) + "\t"
+		print temp
+		sys.exit()
 	
 if __name__ == "__main__":
 	main()
