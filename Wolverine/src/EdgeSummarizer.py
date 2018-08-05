@@ -29,6 +29,8 @@ def generate_argparser():
 	Likelihood file from your previous analysis""")
 	parser.add_argument("-b", "--best_rel", required=False,action="count", default=0, help="""
 	Checks for the best relationship among all""")
+	parser.add_argument("-p", "--penalty_rel", required=False,action="count", default=0, help="""
+	Get the likelihood penalty each relationship imposes""")
 	parser.add_argument("-l", "--l_diff", required=False, type=str, help="""
 	Gets the likelihood difference each gene is from the no constraint""")
 	parser.add_argument("-r", "--relationship_file", required=False, action="count", default=0, help="""
@@ -61,7 +63,17 @@ def main(arguments=None):
 		values = sorted_arrays[1]
 		for i in range(0,len(names)):
 			print "Relationship: " + names[i] + "\t" + str(values[i])
-
+		sys.exit()
+	
+	if args.penalty_rel:
+		best_hash = Summary_utils.get_best(likelihood_file)
+		sorted_arrays = file_utils.sort_hash(best_hash)
+		names = sorted_arrays[0]
+		values = sorted_arrays[1]
+		penalty = 0.0
+		for i in range(0,len(names)):
+			penalty = values[0] - values[i]
+			print "Relationship: " + names[i] + "\t" + str(penalty)
 		
 
 	
