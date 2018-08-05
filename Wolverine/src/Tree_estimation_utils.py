@@ -161,7 +161,7 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 		rel = ""
 		for j in i:
 			rel += j + ","
-		header += "\t" + rel
+		header += "\t" + rel[:-1]
 	
 	Likelihoods.write(header + "\n")
 
