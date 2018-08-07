@@ -209,9 +209,25 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 		count += 1			
 	
 	
+def estimate_gene_trees(TreeProg,FastaHash,PartitionHash,Threads, OutFolder):	
 	
-	
-	
-	
-	
-	
+	cmd = ""
+	cmd = "mkdir " + OutFolder + "/EstimatedGeneTrees/"
+	os.system(cmd)
+	cmd = ""
+	cmd = "ls " + OutFolder + "/Fastas/* > ListofFastas.templist"
+	os.system(cmd)
+	fastas = open("ListofFastas.templist", "r")
+	for i in fastas:
+		gene = []
+		row = ""
+		free = ""
+		i = i.strip("\n")
+		gene = i.split("/")
+		gene = gene[2]
+		row = gene
+		cmd = TreeProg + " --msa " + i + " --model GTR+G --threads " + str(Threads) + " --prefix " + gene
+		os.system(cmd)
+		cmd2 = ""
+		cmd2 = "mv " + gene + ".* " + OutFolder + "/RaxmlLikelihoods/"
+		os.system(cmd2)

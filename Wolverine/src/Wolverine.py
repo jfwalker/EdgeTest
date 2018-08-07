@@ -38,9 +38,8 @@ def generate_argparser():
 	parser.add_argument("-m", "--missing", required=False, type=str, help="""
 	Analyze with missing data, uses clades identified and not conflict, so also
 	a good idea to do for an exhaustive edge search""")
-	parser.add_argument("-e", "--estimate_gene_trees", required=False, type=str, help="""
-	Analyze with missing data, uses clades identified and not conflict, so also
-	a good idea to do for an exhaustive edge search""")
+	parser.add_argument("-e", "--estimate_gene_trees", action="count", default=0, help="""
+	Reverse concatenates, then estimates gene trees, then ends""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
@@ -51,6 +50,10 @@ def generate_argparser():
 	Support value cutoff""")
 	parser.add_argument("-r", "--raxml", required=False, type=str, help="""
 	Location of raxml-ng""")
+	parser.add_argument("-d", "--Threads", required=False, type=str, help="""
+	Threads for raxml-ng, default 2""")
+	parser.add_argument("-n", "--output_tree", required=False, type=str, help="""
+	Consensus Tree of results""")
 	parser.add_argument("-i", "--iqtree", required=False, type=str, help="""
 	Location of iqtree (might not be added yet)""")
 	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
@@ -77,6 +80,11 @@ def main(arguments=None):
 	FastaHash,name_list = seq_utils.fasta_parse(fasta)
 	PartitionHash = seq_utils.partition_parse(partition)
 	
+	if args.Threads:
+		Threads = args.Threads
+	else:
+		Threads = "2"
+		
 	if args.phyx_location:
 		phyx_loc = args.phyx_location
 	else:
@@ -108,7 +116,7 @@ def main(arguments=None):
 		outlog = args.log_file
 	else:
 		outlog = "log.log"
-	
+
 	if args.trees:
 		Trees = args.trees
 		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
@@ -128,7 +136,11 @@ def main(arguments=None):
 		TreeEstimator = args.iqtree
 	else:
 		print "You are using raxml, if you did not specify raxml this is why it crashed, or defaulted to raxml-ng"
-		
+	
+	if args.estimate_gene_trees:
+		Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
+		Tree_estimation_utils.estimate_gene_trees(TreeEstimator,FastaHash,PartitionHash,Threads,OutFolder)
+		sys.exit()	
 	
 	if args.verbosity:
 		print "Your log file is " + outlog
