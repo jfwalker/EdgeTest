@@ -38,6 +38,9 @@ def generate_argparser():
 	parser.add_argument("-m", "--missing", required=False, type=str, help="""
 	Analyze with missing data, uses clades identified and not conflict, so also
 	a good idea to do for an exhaustive edge search""")
+	parser.add_argument("-e", "--estimate_gene_trees", required=False, type=str, help="""
+	Analyze with missing data, uses clades identified and not conflict, so also
+	a good idea to do for an exhaustive edge search""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
