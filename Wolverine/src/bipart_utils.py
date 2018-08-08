@@ -7,6 +7,11 @@ import tree_utils, tree_reader
 
 
 '''
+This needs to identify the other side of the bipartition
+'''
+def flip_side(biparts,name_list):
+	print "flipping"
+'''
 Get the conflicts from clade of interest, uses first tree
 '''
 def get_clade_from_first_seq(phyx_loc,Trees,name_list):

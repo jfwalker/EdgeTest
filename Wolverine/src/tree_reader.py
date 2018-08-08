@@ -1,6 +1,8 @@
 import string, sys
 from node import Node
-#from cnode import Node
+'''
+This does a bit of tree stuff aside from just reading trees
+'''
 
 """
 this takes a newick string as instr

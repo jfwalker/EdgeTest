@@ -144,9 +144,9 @@ def main(arguments=None):
 		biparts = read_a_tree.trees_to_bipart(Trees,Cutoff)
 		#Get a print out of all the clades identified
 		Folder_utils.get_clade_output(OutFolder, biparts)
-		
-		
 		#Get unique with accordance to other side of bipartition
+		bipart_utils.flip_side(biparts,name_list)
+		
 		
 	'''
 	This just gives the option to specify an alternative path to raxml-ng
