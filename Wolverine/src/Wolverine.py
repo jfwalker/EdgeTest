@@ -137,13 +137,17 @@ def main(arguments=None):
 		biparts = []
 		phyx_loc = ""
 		print "own conflict (slow)"
-		print "reading trees"
+		print "Pooling Trees"
 		'''
 		The array biparts is an array of arrays containing clades identified
 		'''
 		biparts = read_a_tree.trees_to_bipart(Trees,Cutoff)
-		for x in biparts:
-			print x
+		#Get a print out of all the clades identified
+		Folder_utils.get_clade_output(OutFolder, biparts)
+		
+		
+		#Get unique with accordance to other side of bipartition
+		
 	'''
 	This just gives the option to specify an alternative path to raxml-ng
 	'''

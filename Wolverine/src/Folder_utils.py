@@ -69,3 +69,19 @@ def	split_to_genes_edge(fasta, part, folder, v):
 		cmd = "mv " + i + ".fa " + folder + "/Fastas/"
 		os.system(cmd)
 	return taxa_content, gene_names
+
+'''
+Takes in all the well supported clades and prints them out
+'''
+def get_clade_output(Outdir, biparts):
+	
+	out = Outdir + "/clades_identified_by_phail.txt"
+	clades_ident = open(out,"w")
+	for x in biparts:
+		line = ""
+		for y in x:
+			line = line + y + "\t"
+		#print line
+		#print line
+		clades_ident.write(line + "\n")
+	clades_ident.close()
