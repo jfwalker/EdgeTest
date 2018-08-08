@@ -119,13 +119,13 @@ def pretty_up(clade):
 			if keepgoing == "true":
 				name = name + ","
 			keepgoing = "false"
-		if i == "(":
+		if i == "(" or i == ",":
 			keepgoing = "true"
 		if keepgoing == "true" and i != "(":
 			name += i
 			prev_char = i
 	#print name
-		
+	#print name
 
 	return(name+",")
 
@@ -148,14 +148,19 @@ def postorder(root,cutoff, array):
 					clade_array = clade.split(",")
 					#print "Here is clade: " 
 					clade_array = filter(None, clade_array)
+					#print clade_array
 					array.append(sorted(clade_array))
 			else:
-				print i.children
+				clade = ""
+				#print i.children
 				for j in i.children:
 					clade = clade + pretty_up(str(j))
 				clade_array = clade.split(",")
-				print "Here is clade: " 
+				#print "Here is clade: " 
 				clade_array = filter(None, clade_array)
+				#print clade_array
+				#sys.exit()
+				array.append(sorted(clade_array))
 		#print array
 		postorder(i,cutoff, array)
 	return array
