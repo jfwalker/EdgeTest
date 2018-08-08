@@ -5,6 +5,7 @@ import sys,os
 import subprocess
 import tree_utils, tree_reader
 
+
 '''
 Get the conflicts from clade of interest, uses first tree
 '''

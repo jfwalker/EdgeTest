@@ -7,7 +7,7 @@ import sys
 import argparse
 import os
 import subprocess
-import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils
+import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils, read_a_tree
 
 '''
 Needs a supermatrix, a tree set
@@ -25,7 +25,7 @@ email: jfwalker@umich.edu
 def generate_argparser():
 	
 	parser = argparse.ArgumentParser(
-        prog="EdgeSummarizer.py",
+        prog="Wolverine.py",
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 		epilog=LICENSE)
@@ -43,7 +43,9 @@ def generate_argparser():
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
-	path to phyx, default is in path""")
+	path to phyx""")
+	parser.add_argument("-o", "--own_con", action="count", default=0, help="""
+	path to phyx""")
 	parser.add_argument("-l", "--log_file", required=False, type=str, help="""
 	Name of a log file to print things to, default is just logfile""")
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
@@ -85,11 +87,6 @@ def main(arguments=None):
 	else:
 		Threads = "2"
 		
-	if args.phyx_location:
-		phyx_loc = args.phyx_location
-	else:
-		phyx_loc = ""
-		
 	if args.output_tree:
 		OutTree = args.output_tree
 	else:
@@ -116,16 +113,40 @@ def main(arguments=None):
 		outlog = args.log_file
 	else:
 		outlog = "log.log"
+	
 
 	if args.trees:
 		Trees = args.trees
+	else:
+		Trees = "Estimated here"
+	
+	'''
+	This lets the user use phyx or do a separate conflict analysis
+	'''
+
+	
+	if args.phyx_location != None:
+		phyx_loc = args.phyx_location
+		Trees = args.trees
 		clade_of_i = bipart_utils.get_clade_from_first_seq(phyx_loc, Trees, name_list)
+		#turn of the edge analysis and leave that to EdgeTest.py
 		just_edge = "false"
 		unused = bipart_utils.conflict_with_clade_of_i(clade_of_i, phyx_loc, Trees, name_list, outlog, Cutoff, just_edge)
 		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff, OutFolder)
 	else:
-		Trees = "Estimated here"
-	
+		biparts = []
+		phyx_loc = ""
+		print "own conflict (slow)"
+		print "reading trees"
+		'''
+		The array biparts is an array of arrays containing clades identified
+		'''
+		biparts = read_a_tree.trees_to_bipart(Trees,Cutoff)
+		for x in biparts:
+			print x
+	'''
+	This just gives the option to specify an alternative path to raxml-ng
+	'''
 	TreeEstimator = "raxml-ng"
 	if args.raxml:
 		TreeEstimator = args.raxml
@@ -137,6 +158,9 @@ def main(arguments=None):
 	else:
 		print "You are using raxml, if you did not specify raxml this is why it crashed, or defaulted to raxml-ng"
 	
+	'''
+	This sticks to estimating gene trees then dies, good for the reverse concatenate feature
+	'''
 	if args.estimate_gene_trees:
 		Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
 		Tree_estimation_utils.estimate_gene_trees(TreeEstimator,FastaHash,PartitionHash,Threads,OutFolder)
@@ -175,10 +199,10 @@ def main(arguments=None):
 	
 	
 	#start the analysis
-	if args.raxml:
-		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
-	elif TreeEstimator == "raxml-ng":
-		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	#if args.raxml:
+	#	Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	#elif TreeEstimator == "raxml-ng":
+	#	Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
 	
 	
 

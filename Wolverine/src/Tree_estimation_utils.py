@@ -229,5 +229,5 @@ def estimate_gene_trees(TreeProg,FastaHash,PartitionHash,Threads, OutFolder):
 		cmd = TreeProg + " --msa " + i + " --model GTR+G --threads " + str(Threads) + " --prefix " + gene
 		os.system(cmd)
 		cmd2 = ""
-		cmd2 = "mv " + gene + ".* " + OutFolder + "/RaxmlLikelihoods/"
+		cmd2 = "mv " + gene + ".* " + OutFolder + "/EstimatedGeneTrees/ && rm ListofFastas.templist"
 		os.system(cmd2)

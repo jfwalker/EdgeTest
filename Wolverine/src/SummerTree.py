@@ -21,7 +21,7 @@ def generate_argparser():
 
 	#parser = argparse.ArgumentParser()
 	parser = argparse.ArgumentParser(
-        prog="EdgeSummarizer.py",
+        prog="SumAtree.py",
         description=__doc__,
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
 		epilog=LICENSE)
