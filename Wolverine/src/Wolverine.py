@@ -6,7 +6,7 @@ your data.
 import sys
 import argparse
 import os
-import subprocess
+import subprocess, conflict_utils
 import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils, read_a_tree
 
 '''
@@ -146,7 +146,7 @@ def main(arguments=None):
 		#Get a print out of all the clades identified
 		Folder_utils.get_clade_output(OutFolder, biparts)
 		#Get unique with accordance to other side of bipartition
-		bipart_utils.flip_side(biparts,name_list)
+		conflict_utils.test_trees(biparts,name_list,Trees,Cutoff)
 		
 		if args.only_con:
 			print "Ending at conflict analysis"

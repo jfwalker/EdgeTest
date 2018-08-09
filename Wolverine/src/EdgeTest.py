@@ -40,7 +40,7 @@ epilog=LICENSE)
 	is in a file (Must be in first tree), must be turned on if you are giving a
 	file and not a command line input of relationship""")
 	parser.add_argument("-o", "--only_specified", required=False, action="count", default=0, help="""
-	No conflict identification test only the csv list of user specified relationships (does more at one time)""")
+	No conflict identification test only the csv list of relationships""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
 	Name for the output folder, default is output_folder_EdgeTest""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
