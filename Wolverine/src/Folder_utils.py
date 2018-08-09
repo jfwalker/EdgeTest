@@ -77,11 +77,13 @@ def get_clade_output(Outdir, biparts):
 	
 	out = Outdir + "/clades_identified_by_phail.txt"
 	clades_ident = open(out,"w")
+	count = 0
 	for x in biparts:
 		line = ""
 		for y in x:
-			line = line + y + "\t"
+			line = line + y + " "
+		count += 1
 		#print line
 		#print line
-		clades_ident.write(line + "\n")
+		clades_ident.write("Clade " + str(count) + ": "+ line + "\n")
 	clades_ident.close()

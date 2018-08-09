@@ -133,9 +133,12 @@ def pretty_up(clade):
 Performs the postorder traversal and returns a clade under the assumption
 it has met a cutoff if a cutoff is given
 '''
-def postorder(root,cutoff, array):
+def postorder(root,cutoff, array, name_array):
 	
 	clade_array = []
+	diff = []
+	full_bipart = []
+	pipe = "|"
 	for i in root.children:
 		if i.children:
 			if i.label:
@@ -148,8 +151,15 @@ def postorder(root,cutoff, array):
 					clade_array = clade.split(",")
 					#print "Here is clade: " 
 					clade_array = filter(None, clade_array)
+					#print name_array
 					#print clade_array
-					array.append(sorted(clade_array))
+					match = set(name_array)
+					diff = sorted(list(match.symmetric_difference(clade_array)))
+					clade_array = sorted(clade_array)
+					clade_array.append("|")
+					clade_array += sorted(diff)
+					#print clade_array
+					array.append(clade_array)
 			else:
 				clade = ""
 				#print i.children
@@ -158,22 +168,50 @@ def postorder(root,cutoff, array):
 				clade_array = clade.split(",")
 				#print "Here is clade: " 
 				clade_array = filter(None, clade_array)
+				match = set(name_array)
+				diff = sorted(list(match.symmetric_difference(clade_array)))
+				clade_array = sorted(clade_array)
+				clade_array.append("|")
+				clade_array += sorted(diff)
 				#print clade_array
-				#sys.exit()
-				array.append(sorted(clade_array))
+				array.append(clade_array)
 		#print array
-		postorder(i,cutoff, array)
+		postorder(i,cutoff, array, name_array)
 	return array
+
+'''
+Gets all the tips in a tree structure
+'''
+def postorder_name_getter(root, array):
 	
-	
+	for i in root.children:
+		if i.istip:
+			array.append(str(i))	
+		postorder_name_getter(i, array)
+	return array
+
+'''
+Need to add in other side of bipartition (maybe all taxa also transferred
+into the postorder?
+'''
 def trees_to_bipart(tree_input,cutoff):
 	
 	test = []
 	array = []
+	name_array = []
 	tropen = open(tree_input, "r")
 	for i in tropen:
+		
+		name_array = []
 		n_temp = build(i)
-		array = postorder(n_temp,cutoff, test)
+		#print "Tree"
+		name_array = postorder_name_getter(n_temp, name_array)
+		#print name_array
+		array = postorder(n_temp,cutoff, test, name_array)
+	'''
+	array is not an array of arrays, may be useful for future?
+	next step knocks that down to the unique ones
+	'''
 	output = []
 	for x in array:
 		if x not in output:

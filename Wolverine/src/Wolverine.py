@@ -44,8 +44,9 @@ def generate_argparser():
 	Name for the output folder, default is output_folder""")
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
 	path to phyx""")
-	parser.add_argument("-o", "--own_con", action="count", default=0, help="""
-	path to phyx""")
+	parser.add_argument("-o", "--only_con", action="count", default=0, help="""
+	Only performs the conflict analysis, will get a good idea of how
+	much conflict underlies your data""")
 	parser.add_argument("-l", "--log_file", required=False, type=str, help="""
 	Name of a log file to print things to, default is just logfile""")
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
@@ -136,7 +137,7 @@ def main(arguments=None):
 	else:
 		biparts = []
 		phyx_loc = ""
-		print "own conflict (slow)"
+		print "own conflict (slower but more robust to missing data)"
 		print "Pooling Trees"
 		'''
 		The array biparts is an array of arrays containing clades identified
@@ -146,6 +147,10 @@ def main(arguments=None):
 		Folder_utils.get_clade_output(OutFolder, biparts)
 		#Get unique with accordance to other side of bipartition
 		bipart_utils.flip_side(biparts,name_list)
+		
+		if args.only_con:
+			print "Ending at conflict analysis"
+			sys.exit()
 		
 		
 	'''
@@ -202,11 +207,11 @@ def main(arguments=None):
 	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
 	
 	
-	#start the analysis
-	#if args.raxml:
-	#	Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
-	#elif TreeEstimator == "raxml-ng":
-	#	Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	#start the edge analysis
+	if args.raxml:
+		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	elif TreeEstimator == "raxml-ng":
+		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
 	
 	
 
