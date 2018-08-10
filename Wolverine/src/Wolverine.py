@@ -208,10 +208,10 @@ def main(arguments=None):
 	
 	
 	#start the edge analysis
-	if args.raxml:
-		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
-	elif TreeEstimator == "raxml-ng":
-		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	#if args.raxml:
+		#Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	#elif TreeEstimator == "raxml-ng":
+		#Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
 	
 	
 
