@@ -3,10 +3,26 @@ import os
 import subprocess
 import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils, read_a_tree
 
-def miss_conflict(left_array, right_array, biparts):
+def miss_conflict(left_array, right_array, biparts, name_array):
 	
 	print "This tree has missing data"
-
+	print left_array
+	print right_array
+	all_taxa = left_array + right_array
+	#identify the taxa that are missing
+	print name_array
+	no_match = set(name_array)
+	diff =list(no_match.symmetric_difference(all_taxa))
+	print diff
+	#Parse all the bipartitions (have a counter so a Hash can match the biparitions)
+	
+	
+	
+	#Check if they are identical (aka easy congruence)
+	
+	#Check if the have overlap (left array) (If so check if the overlap conflicts or is the result of missing data) just missing data equals congruence, no missing data is lack of congruence 
+	
+	#If there's no over don't worry it
 
 
 '''
@@ -26,7 +42,7 @@ clades that have been found already
 def test_trees(biparts,name_list,Trees,cutoff):
 	
 	tropen = open(Trees, "r")
-	print name_list
+	#print name_list
 	for i in tropen:
 		
 		array = []
@@ -53,7 +69,7 @@ def test_trees(biparts,name_list,Trees,cutoff):
 			if total_len == len(name_list):
 				no_miss_conflict(left_array, biparts)
 			else:
-				miss_conflict(left_array, right_array, biparts)
+				miss_conflict(left_array, right_array, biparts, name_list)
 			#sys.exit()
 		
 	#print biparts
