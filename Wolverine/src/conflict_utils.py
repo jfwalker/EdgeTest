@@ -31,7 +31,13 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 	diff =list(no_match.symmetric_difference(all_taxa))
 	#print "Here is the difference: " + str(diff)
 	#Parse all the bipartitions (have a counter so a Hash can match the biparitions)
+	return_array = []
+	
+	
+	#count can be a way to associate bipartitions and trees
+	count = 0
 	for i in biparts:
+		#print count
 		test_left = []
 		test_right = []
 		test_left, test_right = get_left(i)
@@ -79,7 +85,10 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			#print "here is the bipart in question: " + str(left_array)
 			#Check if the have overlap (left array) (If so check if the overlap conflicts or is the result of missing data) just missing data equals congruence, no missing data is lack of congruence
 			#Add together the one in question and the one not in question then check if that is the size of the difference
-		
+			return_array.append(str(count))
+			return_array.append("congruence")
+			return_array.append(str(left_array))
+			
 		#this means that one is nested perfectly within another
 		elif array_size_diff == len(bipart_intersect) or bipart_array_size_diff == len(bipart_intersect):
 			h = ""
@@ -100,19 +109,18 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 				
 		#This is triggered if there is not perfect congruence (ugh...)
 		else:
-			print "There is conflict"
-			print "Here is left test unstripped: " + str(test_left)
-			print "Here is your left bipart in question unstripped: " + str(left_array)
-			print "Here is your test left: " + str(new_left)
-			print "here is the bipart in question: " + str(new_left_bipart)
-			total_size = len(new_left) + len(new_left_bipart)
-				
-			#This means that they don't have overlap so f' em
-			if total_size == len(diff_test_match):
-				h = ""
-				#print "These don't speak to eachother and aint nested"
-				#print "Here is your test left: " + str(test_left)
-				#print "here is the bipart in question: " + str(left_array)
+			#print "There is conflict"
+			#print "Here is left test unstripped: " + str(test_left)
+			#print "Here is your left bipart in question unstripped: " + str(left_array)
+			#print "Here is your test left: " + str(new_left)
+			#print "here is the bipart in question: " + str(new_left_bipart)
+			return_array.append(str(count))
+			return_array.append("conflict")
+			return_array.append(str(left_array))
+			
+		count += 1
+	
+	return return_array
 					
 				
 	#If there's no over don't worry it
@@ -135,10 +143,20 @@ clades that have been found already
 '''
 def test_trees(biparts,name_list,Trees,cutoff):
 	
+	
+	print "Mixing Tree Pools"
 	tropen = open(Trees, "r")
 	#print name_list
+	all_info = []
+	tree_info_array = []
+	count = 0
+	hit_count = 10
 	for i in tropen:
-		print i
+		#print i
+		if(count == hit_count):
+			print "Mixed :" + str(count)
+			hit_count += 10
+		tree_info_array = []
 		array = []
 		test = []
 		name_array = []
@@ -147,7 +165,7 @@ def test_trees(biparts,name_list,Trees,cutoff):
 		array = read_a_tree.postorder(test_tree,cutoff,test,name_array)
 		#array here contains all bipartitions to test
 		for j in array:
-
+			info_array = []
 			left_array = []
 			right_array = []
 			keepgoing = "true"
@@ -160,11 +178,13 @@ def test_trees(biparts,name_list,Trees,cutoff):
 					else:
 						right_array.append(x)
 			total_len = len(left_array) + len(right_array)
-			if total_len == len(name_list):
-				no_miss_conflict(left_array, biparts)
-			else:
-				miss_conflict(left_array, right_array, biparts, name_list)
-			#sys.exit()
-		
-	#print biparts
-	print "here"
+			info_array = miss_conflict(left_array, right_array, biparts, name_list)
+			tree_info_array.append(info_array)
+		all_info.append(tree_info_array)
+		count += 1
+		#sys.exit()
+	#print all_info
+	#print "here"
+	for i in all_info:
+		for j in i:
+			print j
