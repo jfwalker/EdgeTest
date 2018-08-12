@@ -1,9 +1,41 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 import subprocess
 import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils, read_a_tree
 
-
+def summarize(all_info,biparts,OutFolder):
+	
+	out_conf = OutFolder + "/conflict_results.txt"
+	conf = open(out_conf, "w")
+	out_conc = OutFolder + "/concordance_results.txt"
+	conc = open(out_conc, "w")
+	
+	print "( •_•) lets do this "
+	count = 0
+	for i in biparts:
+		line = ""
+		for y in i:
+			line = line + y + " "
+		conf.write("Clade " + str(count) + ": " + line + "\n")
+		for j in all_info:
+			t_count = 0
+			for k in j:
+				for l in k:
+					print l[0]
+					print l[1]
+					print count
+					if str(l[0]) == str(count) and str(l[1]) == "conflict":
+						print "Here"
+						conf.write("\tConflict Tree " + str(t_count) + ": " + str(l[2]) + "\n")
+				t_count += 1
+		count += 1
+	
+	
+	
+	print "( •_•)>⌐■-■"
+	print "(⌐■_■) done"
+	
 def get_left(bipart):
 
 	keepgoing = "true"
@@ -31,8 +63,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 	diff =list(no_match.symmetric_difference(all_taxa))
 	#print "Here is the difference: " + str(diff)
 	#Parse all the bipartitions (have a counter so a Hash can match the biparitions)
-	return_array = []
-	
+	r_array = []
 	
 	#count can be a way to associate bipartitions and trees
 	count = 0
@@ -41,7 +72,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 		test_left = []
 		test_right = []
 		test_left, test_right = get_left(i)
-		
+		return_array = []
 		#splice out the extra with the available for your test, this removes
 		#From your test the missing taxa of you clade
 		#tot_test = test_left + test_right
@@ -88,6 +119,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			return_array.append(str(count))
 			return_array.append("congruence")
 			return_array.append(str(left_array))
+			r_array.append(return_array)
 			
 		#this means that one is nested perfectly within another
 		elif array_size_diff == len(bipart_intersect) or bipart_array_size_diff == len(bipart_intersect):
@@ -117,10 +149,10 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			return_array.append(str(count))
 			return_array.append("conflict")
 			return_array.append(str(left_array))
-			
+			r_array.append(return_array)
 		count += 1
 	
-	return return_array
+	return r_array
 					
 				
 	#If there's no over don't worry it
@@ -154,7 +186,7 @@ def test_trees(biparts,name_list,Trees,cutoff):
 	for i in tropen:
 		#print i
 		if(count == hit_count):
-			print "Mixed :" + str(count)
+			print "(>_<)> Mixed :" + str(count)
 			hit_count += 10
 		tree_info_array = []
 		array = []
@@ -185,6 +217,5 @@ def test_trees(biparts,name_list,Trees,cutoff):
 		#sys.exit()
 	#print all_info
 	#print "here"
-	for i in all_info:
-		for j in i:
-			print j
+	return all_info
+

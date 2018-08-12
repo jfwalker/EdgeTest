@@ -136,6 +136,7 @@ def main(arguments=None):
 		bipart_utils.get_clades(phyx_loc, Trees, name_list, args.cut_off, Cutoff, OutFolder)
 	else:
 		biparts = []
+		all_info = []
 		phyx_loc = ""
 		print "own conflict (slower but more robust to missing data)"
 		print "Pooling Trees"
@@ -146,7 +147,9 @@ def main(arguments=None):
 		#Get a print out of all the clades identified
 		Folder_utils.get_clade_output(OutFolder, biparts)
 		#Get unique with accordance to other side of bipartition
-		conflict_utils.test_trees(biparts,name_list,Trees,Cutoff)
+		all_info = conflict_utils.test_trees(biparts,name_list,Trees,Cutoff)
+		print "Summarizing results"
+		conflict_utils.summarize(all_info,biparts,OutFolder)
 		
 		if args.only_con:
 			print "Ending at conflict analysis"
