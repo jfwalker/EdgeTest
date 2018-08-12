@@ -39,22 +39,56 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 		#print "Here is your test left: " + str(test_left)
 		#print "Here is your test right: " + str(test_right)
 		#Check if they are identical (aka easy congruence)
-		if len(left_array) == len(test_left):
+		left_match_test = set(test_left)
+		diff_test_match = list(left_match_test.symmetric_difference(left_array))
+		array_size_diff = abs(len(left_array) - len(left_match_test))
+		
+		
 		#print "Here is your test left: " + str(test_left)
 		#print "here is the bipart in question: " + str(left_array)
-			left_match_test = set(test_left)
-			diff_test_match = list(left_match_test.symmetric_difference(left_array))
-			if len(diff_test_match) == 0:
-				print "You have easy congruence: "
+		
+		#This means you have no diffences left at the test match (easy congruence)
+		if len(diff_test_match) == 0:
+			h = ""
+			#print "You have easy congruence: "
+			#print "Here is your test left: " + str(test_left)
+			#print "here is the bipart in question: " + str(left_array)
+			#Check if the have overlap (left array) (If so check if the overlap conflicts or is the result of missing data) just missing data equals congruence, no missing data is lack of congruence
+			#Add together the one in question and the one not in question then check if that is the size of the difference
+		
+		elif array_size_diff == len(diff_test_match):
+			h = ""
+			#print "Cool nested, can't speak this clades good: " 
+			#print "Here is your test left: " + str(test_left)
+			#print "here is the bipart in question: " + str(left_array)
+				
+		#This is triggered if there is not perfect congruence (ugh...)
+		else:
+			#print "There is differences"
+			#print "Here is your test left: " + str(test_left)
+			#print "here is the bipart in question: " + str(left_array)
+			total_size = len(test_left) + len(left_array)
+				
+			#This means that they don't have overlap so f' em
+			if total_size == len(diff_test_match):
+				h = ""
+				#print "These don't speak to eachother and aint nested"
+				#print "Here is your test left: " + str(test_left)
+				#print "here is the bipart in question: " + str(left_array)
+			else:
+				h = ""
+				print "these speak to eachother"
 				print "Here is your test left: " + str(test_left)
 				print "here is the bipart in question: " + str(left_array)
-	#Check if the have overlap (left array) (If so check if the overlap conflicts or is the result of missing data) just missing data equals congruence, no missing data is lack of congruence 
-	
+				
+				#Here need to answer do these conflict or is it a lack of data and they are congruent
+				
+				
 	#If there's no over don't worry it
 
 
 '''
-
+Add this for future speed upgrades
 '''
 def no_miss_conflict(left_array, biparts):
 	
