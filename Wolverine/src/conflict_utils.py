@@ -18,17 +18,13 @@ def summarize(all_info,biparts,OutFolder):
 		for y in i:
 			line = line + y + " "
 		conf.write("Clade " + str(count) + ": " + line + "\n")
+		t_count = 0
 		for j in all_info:
-			t_count = 0
 			for k in j:
 				for l in k:
-					print l[0]
-					print l[1]
-					print count
 					if str(l[0]) == str(count) and str(l[1]) == "conflict":
-						print "Here"
 						conf.write("\tConflict Tree " + str(t_count) + ": " + str(l[2]) + "\n")
-				t_count += 1
+			t_count += 1
 		count += 1
 	
 	
@@ -68,7 +64,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 	#count can be a way to associate bipartitions and trees
 	count = 0
 	for i in biparts:
-		#print count
+		print count
 		test_left = []
 		test_right = []
 		test_left, test_right = get_left(i)
@@ -94,6 +90,8 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 		#Get intersection of test and bipart
 		intersect = set(new_left)
 		bipart_intersect = list(intersect.intersection(new_left_bipart))
+		
+		#print "Bipart Intersect: " + str(bipart_intersect) + str(len(bipart_intersect))
 		
 		#print "Here is the differences in size: " + str(len(diff_test_match))
 		#print "Here is new left bipart:" + str(new_left_bipart)
@@ -121,10 +119,11 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			return_array.append(str(left_array))
 			r_array.append(return_array)
 			
-		#this means that one is nested perfectly within another
-		elif array_size_diff == len(bipart_intersect) or bipart_array_size_diff == len(bipart_intersect):
+		#this means that one is nested perfectly within another (This is a bug, sometimes one is met but should'nt be)
+		#elif array_size_diff == len(bipart_intersect) or bipart_array_size_diff == len(bipart_intersect):
+		elif len(left_array) == len(bipart_intersect) or len(new_left) == len(bipart_intersect):
 			h = ""
-			#print "Cool nested, can't speak this clades good: "
+			print "Cool nested, can't speak this clades good: "
 			#print "Here is left test unstripped: " + str(test_left)
 			#print "Here is your left bipart in question unstripped: " + str(left_array)
 			#print "Here is your test left: " + str(new_left)
@@ -137,7 +136,12 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			#print "Here is left test unstripped: " + str(test_left)
 			#print "Here is your left bipart in question unstripped: " + str(left_array)
 			#print "Here is your test left: " + str(new_left)
+			#print "HERE is intersect" + str(bipart_intersect)
 			#print "here is the bipart in question: " + str(new_left_bipart) 
+			#return_array.append(str(count))
+			#return_array.append("Nothing")
+			#return_array.append(str(left_array))
+			#r_array.append(return_array)
 				
 		#This is triggered if there is not perfect congruence (ugh...)
 		else:
@@ -210,6 +214,7 @@ def test_trees(biparts,name_list,Trees,cutoff):
 					else:
 						right_array.append(x)
 			total_len = len(left_array) + len(right_array)
+			print "LEFT array entering" + str(left_array)
 			info_array = miss_conflict(left_array, right_array, biparts, name_list)
 			tree_info_array.append(info_array)
 		all_info.append(tree_info_array)
