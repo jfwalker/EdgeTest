@@ -29,9 +29,9 @@ def summarize(all_info,biparts,OutFolder):
 		conc.write("Clade " + str(count) + ": " + line + "\n")
 		conf_uniq.write("Clade " + str(count) + ": " + line + "\n")
 		t_count = 0
-		#unique_array = []
+		unique_array = []
 		for j in all_info:
-			unique_array = []
+			#unique_array = []
 			for k in j:
 				for l in k:
 					if str(l[0]) == str(count) and str(l[1]) == "conflict":
@@ -43,14 +43,15 @@ def summarize(all_info,biparts,OutFolder):
 						str1 = ' '.join(l[2])
 						conc.write("\tConcordant Tree " + str(t_count) + ": " + str1 + "\n")
 			t_count += 1
-		#output = []
+		output = []
 		#print "Here is unique" + str(unique_array)
-		#for x in unique_array:
-		#	if x not in output:
-		#		output.append(x)
+		for x in unique_array:
+			if x not in output:
+				output.append(x)
 		#print output
-		#for x in output:
-		#	conf_uniq.write("\tConflict" + ": " + str(x) + "\n")
+		for x in output:
+			str1 = ' '.join(x)
+			conf_uniq.write("\tConflict" + ": " + str1 + "\n")
 		count += 1
 		
 
@@ -138,11 +139,16 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 		#print "here is the bipart in question: " + str(left_array)
 		
 		#This means you have no diffences left at the test match (easy congruence)
+		if len(new_left) == 1 or  len(new_left_bipart) == 1:
+			h = ""
+		
 		if len(diff_test_match) == 0:
 			h = ""
 			#print "You have congruence: "
 			#print "Here is your test left: " + str(test_left)
 			#print "here is the bipart in question: " + str(left_array)
+			#print "Your new left test: " + str(new_left)
+			#print "Your new left test: " + str(new_left_bipart)
 			#Check if the have overlap (left array) (If so check if the overlap conflicts or is the result of missing data) just missing data equals congruence, no missing data is lack of congruence
 			#Add together the one in question and the one not in question then check if that is the size of the difference
 			return_array.append(str(count))
@@ -153,7 +159,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 		#this means that one is nested perfectly within another (This is a bug, sometimes one is met but should'nt be)
 		#elif array_size_diff == len(bipart_intersect) or bipart_array_size_diff == len(bipart_intersect):
 		#One can't really be evaluated and if the new bipart is the same size as the intersect then that's an indication it's completely taken
-		elif len(new_left_bipart) == len(bipart_intersect) or len(new_left) == len(bipart_intersect) or len(new_left) == 1 or  len(new_left_bipart) == 1:
+		elif len(new_left_bipart) == len(bipart_intersect) or len(new_left) == len(bipart_intersect):
 			h = ""
 			#print "Cool nested, can't speak this clades good: "
 			#print "Here is left test unstripped: " + str(test_left)
@@ -176,11 +182,11 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			#r_array.append(return_array)
 		#This is triggered if there is not perfect congruence (ugh...)
 		else:
-			print "There is conflict"
-			print "Here is left test unstripped: " + str(test_left)
-			print "Here is your left bipart in question unstripped: " + str(left_array)
-			print "Here is your test left: " + str(new_left)
-			print "here is the bipart in question: " + str(new_left_bipart)
+			#print "There is conflict"
+			#print "Here is left test unstripped: " + str(test_left)
+			#print "Here is your left bipart in question unstripped: " + str(left_array)
+			#print "Here is your test left: " + str(new_left)
+			#print "here is the bipart in question: " + str(new_left_bipart)
 			return_array.append(str(count))
 			return_array.append("conflict")
 			return_array.append(all_taxaWow)
@@ -231,6 +237,8 @@ def test_trees(biparts,name_list,Trees,cutoff):
 		name_array = read_a_tree.postorder_name_getter(test_tree, name_array)
 		array = read_a_tree.postorder(test_tree,cutoff,test,name_array)
 		#array here contains all bipartitions to test
+		#print array
+		#sys.exit()
 		for j in array:
 			info_array = []
 			left_array = []
