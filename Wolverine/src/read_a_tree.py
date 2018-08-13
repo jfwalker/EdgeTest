@@ -209,7 +209,7 @@ def trees_to_bipart(tree_input,cutoff):
 		#print name_array
 		array = postorder(n_temp,cutoff, test, name_array)
 	'''
-	array is not an array of arrays, may be useful for future?
+	array is now an array of arrays, may be useful for future?
 	next step knocks that down to the unique ones
 	'''
 	output = []

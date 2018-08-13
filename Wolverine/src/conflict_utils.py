@@ -4,32 +4,58 @@ import os
 import subprocess
 import seq_utils, Folder_utils, bipart_utils, Tree_estimation_utils, read_a_tree
 
+
+
+'''
+This is a really bad way of doing it, lets be honest
+'''
 def summarize(all_info,biparts,OutFolder):
 	
 	out_conf = OutFolder + "/conflict_results.txt"
 	conf = open(out_conf, "w")
+	out_conf_uniq = OutFolder + "/unique_conflict_results.txt"
+	conf_uniq = open(out_conf_uniq, "w")
 	out_conc = OutFolder + "/concordance_results.txt"
 	conc = open(out_conc, "w")
 	
-	print "( •_•) lets do this "
+	str1 = ""
+	print "( •_•) lets do this (going full print)"
 	count = 0
 	for i in biparts:
 		line = ""
 		for y in i:
 			line = line + y + " "
 		conf.write("Clade " + str(count) + ": " + line + "\n")
+		conc.write("Clade " + str(count) + ": " + line + "\n")
+		conf_uniq.write("Clade " + str(count) + ": " + line + "\n")
 		t_count = 0
+		#unique_array = []
 		for j in all_info:
+			unique_array = []
 			for k in j:
 				for l in k:
 					if str(l[0]) == str(count) and str(l[1]) == "conflict":
-						conf.write("\tConflict Tree " + str(t_count) + ": " + str(l[2]) + "\n")
+						str1 = ""
+						str1 = ' '.join(l[2])
+						conf.write("\tConflict Tree " + str(t_count) + ": " + str1 + "\n")
+						unique_array.append(l[2])
+					if str(l[0]) == str(count) and str(l[1]) == "congruence":
+						str1 = ' '.join(l[2])
+						conc.write("\tConcordant Tree " + str(t_count) + ": " + str1 + "\n")
 			t_count += 1
+		#output = []
+		#print "Here is unique" + str(unique_array)
+		#for x in unique_array:
+		#	if x not in output:
+		#		output.append(x)
+		#print output
+		#for x in output:
+		#	conf_uniq.write("\tConflict" + ": " + str(x) + "\n")
 		count += 1
+		
+
+	print "( •_•)>⌐■-■  finished concord and conflict"
 	
-	
-	
-	print "( •_•)>⌐■-■"
 	print "(⌐■_■) done"
 	
 def get_left(bipart):
@@ -53,6 +79,11 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 	#print "here is the bipart in question: " + str(left_array)
 	#print "Here is the combo of taxa: " + str(right_array)
 	all_taxa = left_array + right_array
+	eh = left_array[:]
+	eh.append("|")
+	all_taxaWow = []
+	all_taxaWow = eh + right_array
+	#print all_taxa2
 	#identify the taxa that are missing
 	#print "Here is the whole list: " + str(name_array)
 	no_match = set(name_array)
@@ -64,7 +95,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 	#count can be a way to associate bipartitions and trees
 	count = 0
 	for i in biparts:
-		print count
+		#print count
 		test_left = []
 		test_right = []
 		test_left, test_right = get_left(i)
@@ -78,7 +109,7 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 		
 		all_taxa2 = test_right + test_left
 		avail2 = set(all_taxa2)
-		new_left_bipart = list(avail.intersection(left_array))
+		new_left_bipart = list(avail2.intersection(left_array))
 		
 		#print "here is the bipart in question: " + str(left_array)
 		#print "Here is your test left: " + str(test_left)
@@ -116,14 +147,15 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			#Add together the one in question and the one not in question then check if that is the size of the difference
 			return_array.append(str(count))
 			return_array.append("congruence")
-			return_array.append(str(left_array))
+			return_array.append(all_taxaWow)
 			r_array.append(return_array)
 			
 		#this means that one is nested perfectly within another (This is a bug, sometimes one is met but should'nt be)
 		#elif array_size_diff == len(bipart_intersect) or bipart_array_size_diff == len(bipart_intersect):
-		elif len(left_array) == len(bipart_intersect) or len(new_left) == len(bipart_intersect):
+		#One can't really be evaluated and if the new bipart is the same size as the intersect then that's an indication it's completely taken
+		elif len(new_left_bipart) == len(bipart_intersect) or len(new_left) == len(bipart_intersect) or len(new_left) == 1 or  len(new_left_bipart) == 1:
 			h = ""
-			print "Cool nested, can't speak this clades good: "
+			#print "Cool nested, can't speak this clades good: "
 			#print "Here is left test unstripped: " + str(test_left)
 			#print "Here is your left bipart in question unstripped: " + str(left_array)
 			#print "Here is your test left: " + str(new_left)
@@ -142,17 +174,16 @@ def miss_conflict(left_array, right_array, biparts, name_array):
 			#return_array.append("Nothing")
 			#return_array.append(str(left_array))
 			#r_array.append(return_array)
-				
 		#This is triggered if there is not perfect congruence (ugh...)
 		else:
-			#print "There is conflict"
-			#print "Here is left test unstripped: " + str(test_left)
-			#print "Here is your left bipart in question unstripped: " + str(left_array)
-			#print "Here is your test left: " + str(new_left)
-			#print "here is the bipart in question: " + str(new_left_bipart)
+			print "There is conflict"
+			print "Here is left test unstripped: " + str(test_left)
+			print "Here is your left bipart in question unstripped: " + str(left_array)
+			print "Here is your test left: " + str(new_left)
+			print "here is the bipart in question: " + str(new_left_bipart)
 			return_array.append(str(count))
 			return_array.append("conflict")
-			return_array.append(str(left_array))
+			return_array.append(all_taxaWow)
 			r_array.append(return_array)
 		count += 1
 	
@@ -190,7 +221,7 @@ def test_trees(biparts,name_list,Trees,cutoff):
 	for i in tropen:
 		#print i
 		if(count == hit_count):
-			print "(>_<)> Mixed :" + str(count)
+			print "（ ﾟ Дﾟ) Mixed :" + str(count)
 			hit_count += 10
 		tree_info_array = []
 		array = []
@@ -214,7 +245,7 @@ def test_trees(biparts,name_list,Trees,cutoff):
 					else:
 						right_array.append(x)
 			total_len = len(left_array) + len(right_array)
-			print "LEFT array entering" + str(left_array)
+			#print "LEFT array entering" + str(left_array)
 			info_array = miss_conflict(left_array, right_array, biparts, name_list)
 			tree_info_array.append(info_array)
 		all_info.append(tree_info_array)
