@@ -56,7 +56,6 @@ def summarize(all_info,biparts,OutFolder):
 		
 
 	print "( •_•)>⌐■-■  finished concord and conflict"
-	
 	print "(⌐■_■) done"
 	
 def get_left(bipart):
