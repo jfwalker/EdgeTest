@@ -237,10 +237,13 @@ def make_constraint(sp_list,edge):
 			out_clade += "," + i
 	#print "Here is ingroup: " + in_clade
 	#print "Here is outgroup: " + out_clade
-	constraint = in_clade + ")" + out_clade + ")" + ";"
+	if out_clade == "":
+		return "false"
+	else:
+		constraint = in_clade + ")" + out_clade + ")" + ";"
+		return constraint
 	
 	#print "Here is the constraint: " + constraint
-	return constraint
 	
 	#for i in ingroup:
 	#	print i
@@ -264,7 +267,10 @@ def create_constraint(species_avail, edge, gene_name):
 	use_constraint = testable_edge(species_avail, edge)
 	if use_constraint == "true":
 		constraint = make_constraint(species_avail, edge)
-		return constraint
+		if constraint == "false":
+			return "false"
+		else:
+			return constraint
 	else:
 		return "false"
 	
