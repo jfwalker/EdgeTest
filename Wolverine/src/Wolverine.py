@@ -55,10 +55,6 @@ def generate_argparser():
 	Location of raxml-ng""")
 	parser.add_argument("-d", "--Threads", required=False, type=str, help="""
 	Threads for raxml-ng, default 2""")
-	parser.add_argument("-n", "--output_tree", required=False, type=str, help="""
-	Consensus Tree of results""")
-	parser.add_argument("-i", "--iqtree", required=False, type=str, help="""
-	Location of iqtree (might not be added yet)""")
 	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
 	Increase the verbosity""")
 	return parser
@@ -83,15 +79,24 @@ def main(arguments=None):
 	FastaHash,name_list = seq_utils.fasta_parse(fasta)
 	PartitionHash = seq_utils.partition_parse(partition)
 	
+	
+	'''
+	This just gives the option to specify an alternative path to raxml-ng
+	'''
+	if args.raxml:
+		TreeEstimator = args.raxml
+	else:
+		TreeEstimator = "raxml-ng"	
+	
+	'''
+	Add in a feature that you can pick up where the analysis left off
+	Probably make this log file related? Maybe easier to have it read
+	in the folder and analyze what has been done?
+	'''
 	if args.Threads:
 		Threads = args.Threads
 	else:
 		Threads = "2"
-		
-	if args.output_tree:
-		OutTree = args.output_tree
-	else:
-		OutTree = "EdgeTree.tre"
 		
 	if args.cut_off:
 		if args.trees:
@@ -119,13 +124,16 @@ def main(arguments=None):
 	if args.trees:
 		Trees = args.trees
 	else:
+		print "Got it, no trees estimating them"
+		Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
+		Tree_estimation_utils.estimate_gene_trees(TreeEstimator,FastaHash,PartitionHash,Threads,OutFolder)
 		Trees = "Estimated here"
+		if args.estimate_gene_trees:
+			sys.exit()
 	
 	'''
 	This lets the user use phyx or do a separate conflict analysis
 	'''
-
-	
 	if args.phyx_location != None:
 		phyx_loc = args.phyx_location
 		Trees = args.trees
@@ -154,29 +162,6 @@ def main(arguments=None):
 		if args.only_con:
 			print "Ending at conflict analysis"
 			sys.exit()
-		
-		
-	'''
-	This just gives the option to specify an alternative path to raxml-ng
-	'''
-	TreeEstimator = "raxml-ng"
-	if args.raxml:
-		TreeEstimator = args.raxml
-	else:
-		print "you are using iqtree, if you did not specify iqtree this is likely why it crashed, or defaulted to raxml-ng"
-		
-	if args.iqtree:
-		TreeEstimator = args.iqtree
-	else:
-		print "You are using raxml, if you did not specify raxml this is why it crashed, or defaulted to raxml-ng"
-	
-	'''
-	This sticks to estimating gene trees then dies, good for the reverse concatenate feature
-	'''
-	if args.estimate_gene_trees:
-		Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
-		Tree_estimation_utils.estimate_gene_trees(TreeEstimator,FastaHash,PartitionHash,Threads,OutFolder)
-		sys.exit()	
 	
 	if args.verbosity:
 		print "Your log file is " + outlog
