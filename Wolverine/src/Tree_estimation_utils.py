@@ -75,6 +75,7 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 			cmd2 = "mv " + prefix + ".* " + OutFolder + "/RaxmlLikelihoods/"
 			os.system(cmd2)
 			row = row + "\t" + t[1].strip("\n").strip(" ")
+			#print "Here is: " + row
 		print "(☞ﾟヮﾟ)☞\t" + gene
 		Likelihoods.write(row + "\n")
 			#print cmd

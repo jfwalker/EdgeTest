@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 This performs an exhaustive edge search and creates a log file for summarizing
 to a tree. The program SummerTree.py can create the consensus tree(s) underlying
@@ -36,8 +37,9 @@ def generate_argparser():
 	parser.add_argument("-t", "--trees", required=False, type=str, help="""
 	List of trees to analyze, in default will estimate trees separately""")
 	parser.add_argument("-m", "--missing", required=False, type=str, help="""
-	Analyze with missing data, uses clades identified and not conflict, so also
-	a good idea to do for an exhaustive edge search""")
+	Continue where your analysis left off, specify the output folder, good
+	for if you use xubuntu and your computer crashes on a semi regular basis
+	or for other more normal reasons""")
 	parser.add_argument("-e", "--estimate_gene_trees", action="count", default=0, help="""
 	Reverse concatenates, then estimates gene trees, then ends""")
 	parser.add_argument("-f", "--output_folder", required=False, type=str, help="""
@@ -45,8 +47,8 @@ def generate_argparser():
 	parser.add_argument("-p", "--phyx_location", required=False, type=str, help="""
 	path to phyx""")
 	parser.add_argument("-o", "--only_con", action="count", default=0, help="""
-	Only performs the conflict analysis, will get a good idea of how
-	much conflict underlies your data""")
+	Die after your conflict analysis, useful for creating the conflict files
+	for downstream analyses""")
 	parser.add_argument("-l", "--log_file", required=False, type=str, help="""
 	Name of a log file to print things to, default is just logfile""")
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
@@ -55,6 +57,8 @@ def generate_argparser():
 	Location of raxml-ng""")
 	parser.add_argument("-d", "--Threads", required=False, type=str, help="""
 	Threads for raxml-ng, default 2""")
+	parser.add_argument("-n", "--no_edge", action="count", help="""
+	Do all but the edge based analysis""")
 	parser.add_argument("-v", "--verbosity", action="count", default=0, help="""
 	Increase the verbosity""")
 	return parser
@@ -167,7 +171,6 @@ def main(arguments=None):
 		print "Your log file is " + outlog
 		print "Your Fasta file is " + args.supermatrix
 		print "Your Partition file is " + args.partition
-		print "Your Output tree file is " + OutTree
 		print "Path to phyx is: " + phyx_loc
 		print "Your Output folder is " + OutFolder
 		print "Your cutoff is: " + str(Cutoff)
@@ -186,7 +189,6 @@ def main(arguments=None):
 	outf_log.write("Your Fasta file is " + args.supermatrix + "\n")
 	outf_log.write("Your Partition file is " + args.partition + "\n")
 	outf_log.write("Your Trees file is " + Trees + "\n")
-	outf_log.write("Your Output tree file is " + OutTree + "\n")
 	outf_log.write("Your Output folder is " + OutFolder + "\n")
 	outf_log.write("Path to phyx is: " + phyx_loc + "\n")
 	outf_log.write("Your cutoff is: " + str(Cutoff) + "\n")
@@ -194,12 +196,10 @@ def main(arguments=None):
 	#Divide to genes
 	Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
 	
-	
-	#start the edge analysis
-	#if args.raxml:
-		#Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
-	#elif TreeEstimator == "raxml-ng":
-		#Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
+	if args.no_edge:
+		print "(⌐■_■) Finished without an edge analysis"
+	else:
+		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder)
 	
 	
 
