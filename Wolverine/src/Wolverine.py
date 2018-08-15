@@ -49,6 +49,9 @@ def generate_argparser():
 	parser.add_argument("-o", "--only_con", action="count", default=0, help="""
 	Die after your conflict analysis, useful for creating the conflict files
 	for downstream analyses""")
+	parser.add_argument("-a", "--only_clade", action="count", default=0, help="""
+	Die after your conflict analysis, useful for creating the conflict files
+	for downstream analyses""")
 	parser.add_argument("-l", "--log_file", required=False, type=str, help="""
 	Name of a log file to print things to, default is just logfile""")
 	parser.add_argument("-c", "--cut_off", required=False, type=int, help="""
@@ -128,7 +131,7 @@ def main(arguments=None):
 	if args.trees:
 		Trees = args.trees
 	else:
-		print "Got it, no trees estimating them"
+		print "Got it, no trees given so I'll estimate them"
 		Folder_utils.split_to_genes(FastaHash,PartitionHash,OutFolder,args.verbosity)
 		Tree_estimation_utils.estimate_gene_trees(TreeEstimator,FastaHash,PartitionHash,Threads,OutFolder)
 		Trees = "Estimated here"
@@ -159,9 +162,23 @@ def main(arguments=None):
 		#Get a print out of all the clades identified
 		Folder_utils.get_clade_output(OutFolder, biparts)
 		#Get unique with accordance to other side of bipartition
-		all_info = conflict_utils.test_trees(biparts,name_list,Trees,Cutoff)
-		print "Summarizing results"
-		conflict_utils.summarize(all_info,biparts,OutFolder)
+		if args.only_clade:
+			print "Only Doing clades"
+			cmd = ""
+			cmd = "mkdir " + OutFolder + "/CladeAnalysis/"
+			cmd = ""
+			cmd = "mv " + OutFolder + "/clades_identified_by_phail.txt " + OutFolder + "/CladeAnalysis/"
+			os.system(cmd)
+		else:
+			all_info = conflict_utils.test_trees(biparts,name_list,Trees,Cutoff)
+			print "Summarizing results"
+			conflict_utils.summarize(all_info,biparts,OutFolder)
+			cmd = ""
+			cmd = "mkdir " + OutFolder + "/CladeAnalysis/"
+			os.system(cmd)
+			cmd = ""
+			cmd = "mv " + OutFolder + "/conflict_results.txt " + OutFolder + "/concordance_results.txt " + OutFolder + "/clades_identified_by_phail.txt " + OutFolder + "/unique_conflict_results.txt " + OutFolder + "/CladeAnalysis/"
+			os.system(cmd)
 		
 		if args.only_con:
 			print "Ending at conflict analysis"
