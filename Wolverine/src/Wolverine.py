@@ -166,6 +166,7 @@ def main(arguments=None):
 			print "Only Doing clades"
 			cmd = ""
 			cmd = "mkdir " + OutFolder + "/CladeAnalysis/"
+			os.system(cmd)
 			cmd = ""
 			cmd = "mv " + OutFolder + "/clades_identified_by_phail.txt " + OutFolder + "/CladeAnalysis/"
 			os.system(cmd)
@@ -183,6 +184,8 @@ def main(arguments=None):
 		if args.only_con:
 			print "Ending at conflict analysis"
 			sys.exit()
+		else:
+			print "Building Constraints"
 	
 	if args.verbosity:
 		print "Your log file is " + outlog
