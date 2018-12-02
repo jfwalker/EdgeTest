@@ -29,6 +29,12 @@ def generate_argparser():
 	Likelihood file from your previous analysis""")
 	parser.add_argument("-j", "--just_clades", action="count", default=0, help="""
 	Clades underlying your data, ordered by likelihood""")
+	parser.add_argument("-b", "--best_clades", action="count", default=0, help="""
+	Highest likelihood clades that don't conflict""")
+	parser.add_argument("-c", "--conflict_file", action="count", default=0, help="""
+	File of the conflicts identified by phail""")
+	parser.add_argument("-o", "--output_file", required=False, type=str, default=0, help="""
+	output file, or else will go to terminal""")
 	return parser
 
 
@@ -43,6 +49,10 @@ def main(arguments=None):
 	likelihood_file = file_utils.get_like_file(like)
 	like.close()
 	
+	if args.output_file:
+		outfile = args.output_file
+		outf = open(outfile, "w")
+	
 	if args.just_clades:
 		best_hash = Summary_utils.get_best(likelihood_file)
 		sorted_arrays = file_utils.sort_hash(best_hash)
@@ -55,9 +65,14 @@ def main(arguments=None):
 			elif names[i] == "GeneName":
 				the = "holder"
 			else:
-				print "(" + names[i] + ")" +str(values[i]) + ";"
+				just_the_clade = "(" + names[i] + ")" +str(values[i]) + ";"
+				if args.output_file:
+					outf.write(just_the_clade + "\n")
+				else:
+					print just_the_clade
 		
-
+	#if args.just_clades:
+		
 
 
 	
