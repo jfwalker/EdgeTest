@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 This is the post Wolvering tree maker, different summaries of the tree
 can be constructed
@@ -71,8 +72,16 @@ def main(arguments=None):
 				else:
 					print just_the_clade
 		
-	#if args.just_clades:
-		
+	if args.best_clades:
+		if args.conflict_file:
+			print "Yay"
+			best_hash = Summary_utils.get_best(likelihood_file)
+			sorted_arrays = file_utils.sort_hash(best_hash)
+			names = sorted_arrays[0]
+			values = sorted_arrays[1]
+			Summary_utils.get_all_names_array(names)
+		else:
+			print "ERROR!!!!!!! ( ﾟ Дﾟ)\nThis requires the conflict (-c option) output of Wolverine.py.\nYou can get this by doing (-o) and specifying no edge (-n)"
 
 
 	

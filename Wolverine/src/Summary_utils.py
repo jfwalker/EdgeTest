@@ -44,3 +44,9 @@ def get_like_dif(like_array):
 			new_row.append(diff)
 		diff_array.append(new_row)
 	return diff_array
+
+'''
+Get all unique names from an array with the biparts
+'''
+def get_all_names_array(array):
+	print "Need to add to this"

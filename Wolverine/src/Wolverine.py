@@ -220,7 +220,7 @@ def main(arguments=None):
 	if args.no_edge:
 		print "(⌐■_■) Finished without an edge analysis"
 	else:
-		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator, OutFolder,args.verbosity)
+		Tree_estimation_utils.estimate_tree_raxml(TreeEstimator,OutFolder,args.verbosity)
 	
 
 	
