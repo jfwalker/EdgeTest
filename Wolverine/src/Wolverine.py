@@ -186,6 +186,7 @@ def main(arguments=None):
 			sys.exit()
 		else:
 			print "Building Constraints"
+			bipart_utils.get_const_from_own(OutFolder)
 	
 	if args.verbosity:
 		print "Your log file is " + outlog

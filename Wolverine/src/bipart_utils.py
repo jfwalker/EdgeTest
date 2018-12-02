@@ -273,9 +273,30 @@ def create_constraint(species_avail, edge, gene_name):
 			return constraint
 	else:
 		return "false"
-	
-	
 
+'''
+Make the constraints from own identified clades
+Currently only good for full data
+'''
+def get_const_from_own(outdir):
+
+	cmd = "mkdir " + outdir + "/constraints"
+	count = 0
+	os.system(cmd)
+	clade_file = outdir + "/CladeAnalysis/clades_identified_by_phail.txt"
+	clades = open(clade_file, "r")
+	for i in clades:
+		i = i.strip("\n")
+		#print i
+		test = i.split(":")
+		in_and_out = test[1].split("|")
+		in_clade = in_and_out[0][1:-1].replace(" ",",")
+		out_clade = in_and_out[1][1:-1].replace(" ",",")
+		clade = "((" + in_clade + ")," + out_clade + ")\n"
+		outname = outdir + "/constraints/" + "constraint_" + str(count)
+		outf = open(outname, "w")
+		outf.write(clade)
+		count += 1
 	
 '''
 	#Get the conflicts that match with the clade of interest
