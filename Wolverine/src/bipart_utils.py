@@ -297,7 +297,26 @@ def get_const_from_own(outdir):
 		outf = open(outname, "w")
 		outf.write(clade)
 		count += 1
+'''
+This is definitely superfluous
+'''
+def make_outgroup_constraints(names,outdir):
 	
+	count = 0
+	cmd = "mkdir " + outdir + "/singlet_constraints"
+	os.system(cmd)
+	for i in names:
+		inclade = ""
+		for j in names:
+			if i != j:
+				inclade += j + ","
+		outgroup_clade = "((" + inclade[0:-1] + ")," + i + ")\n"
+		print outgroup_clade
+		outname = outdir + "/singlet_constraints/" + "constraint_" + str(count)
+		outf = open(outname, "w")
+		outf.write(outgroup_clade)
+		count += 1
+
 '''
 	#Get the conflicts that match with the clade of interest
 	cmd = ""

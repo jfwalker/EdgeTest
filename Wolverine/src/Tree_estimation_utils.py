@@ -5,9 +5,9 @@ import subprocess
 import tree_utils, tree_reader
 import bipart_utils
 
-def estimate_tree_raxml(TreeProg, OutFolder):
+def estimate_tree_raxml(TreeProg, OutFolder, verbosity):
 	print "Estimating likelihoods using " + TreeProg
-	
+
 	cmd = ""
 	cmd = "ls " + OutFolder + "/Fastas/* > ListofFastas.templist"
 	os.system(cmd)
@@ -50,7 +50,6 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 		gene = i.split("/")
 		gene = gene[2]
 		row = gene
-		
 		#Get with no constraint
 		cmd = ""
 		cmd = TreeProg + " --msa " + i + " --model GTR+G --threads 4 --prefix " + gene + " | grep \"Final LogLikelihood:\" "
@@ -63,6 +62,8 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 		
 		const = open("ListofConstraints.templist", "r")
 		for x in const:
+			if verbosity == 1:
+				print "(⌐■_■) This is verbose and you are at: " + x.strip("\n")
 			x = x.strip("\n")
 			const_name = x.split("/")
 			const_name = const_name[2]
@@ -75,6 +76,8 @@ def estimate_tree_raxml(TreeProg, OutFolder):
 			cmd2 = "mv " + prefix + ".* " + OutFolder + "/RaxmlLikelihoods/"
 			os.system(cmd2)
 			row = row + "\t" + t[1].strip("\n").strip(" ")
+			if verbosity == 1:
+				print "(⌐■_■) Likelihood: " + t[1].strip("\n").strip(" ")
 			#print "Here is: " + row
 		print "(☞ﾟヮﾟ)☞\t" + gene
 		Likelihoods.write(row + "\n")
