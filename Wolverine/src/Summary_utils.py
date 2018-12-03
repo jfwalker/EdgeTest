@@ -93,6 +93,8 @@ Check if any of it's conflicts are in the final rels
 def FindKeeper(conflict,name,FinalRels):
 	
 	array = []
+	test_array = []
+	test_array2 = []
 	test = ""
 	name = name.replace(",", " ")
 	
@@ -100,14 +102,19 @@ def FindKeeper(conflict,name,FinalRels):
 		i = i.replace(",", " ")
 		array.append(i)
 	match = set(array)
-	#identify the conflicts
-	if conflict[name]:
+
+	
+	#parse existing conflicts to see if they are in final rels
+	for j in conflict[name]:
+
+		for i in FinalRels:
 		
-		#parse existing conflicts to see if they are in final rels
-		for j in conflict[name]:
-			
-			if len(match.intersection(j)) == 0:
-				test = "true"
+			test_array = i.split(",")
+			if len(test_array) == len(j):
+
+				if len(match.intersection(j)) == 0:
+					test = "true"
+	
 	if test == "true":
 		return "hit"
 	else:

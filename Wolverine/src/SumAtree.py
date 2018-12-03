@@ -100,7 +100,7 @@ def main(arguments=None):
 					if Match == "no_hit":
 						FinalRels.append(names[i])
 			for i in FinalRels:
-				print "(" + i + ")"	
+				print "(" + i + ");"	
 			
 		else:
 			print "ERROR!!!!!!! ( ﾟ Дﾟ)\nThis requires the conflict (-c option) output of Wolverine.py.\nYou can get this by doing (-o) and specifying no edge (-n)"

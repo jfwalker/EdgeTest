@@ -1,5 +1,5 @@
 import sys
-import tree_reader
+import tree_reader2
 import tree_utils
 import node
 
@@ -10,7 +10,7 @@ if __name__ == "__main__":
     
     trees = []
     maintree = node.Node()
-    for i in tree_reader.read_tree_file_iter(sys.argv[1]):
+    for i in tree_reader2.read_tree_file_iter(sys.argv[1]):
         trees.append(i)
     
     lvsnms = set()
