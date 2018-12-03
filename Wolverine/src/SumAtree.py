@@ -32,7 +32,7 @@ def generate_argparser():
 	Clades underlying your data, ordered by likelihood""")
 	parser.add_argument("-b", "--best_clades", action="count", default=0, help="""
 	Highest likelihood clades that don't conflict""")
-	parser.add_argument("-c", "--conflict_file", action="count", default=0, help="""
+	parser.add_argument("-c", "--conflict_file", required=False, type=str, default=0, help="""
 	File of the conflicts identified by phail""")
 	parser.add_argument("-o", "--output_file", required=False, type=str, default=0, help="""
 	output file, or else will go to terminal""")
@@ -73,13 +73,35 @@ def main(arguments=None):
 					print just_the_clade
 		
 	if args.best_clades:
+	
+		FinalRels = []
 		if args.conflict_file:
-			print "Yay"
 			best_hash = Summary_utils.get_best(likelihood_file)
 			sorted_arrays = file_utils.sort_hash(best_hash)
 			names = sorted_arrays[0]
 			values = sorted_arrays[1]
-			Summary_utils.get_all_names_array(names)
+			
+			#Has an array of all names and a newick that's just a giant polytomy
+			names_array,polytomy_newick = Summary_utils.get_all_names_array(names)
+			
+			#Take in the conflict file, all conflicts is now a hash with an array of cons
+			all_conflicts = Summary_utils.get_conflict_struct(args.conflict_file)
+			
+			FinalRels.append(polytomy_newick)
+			#need to go through sorted array then accept and reject relationships
+			for i in range(0,len(names)):
+				if names[i] == "NoRel":
+					the = "holder"
+				elif names[i] == "GeneName":
+					the = "holder"
+				else:
+					#Take this and check if it exists
+					Match = Summary_utils.FindKeeper(all_conflicts,names[i],FinalRels)
+					if Match == "no_hit":
+						FinalRels.append(names[i])
+			for i in FinalRels:
+				print "(" + i + ")"	
+			
 		else:
 			print "ERROR!!!!!!! ( ﾟ Дﾟ)\nThis requires the conflict (-c option) output of Wolverine.py.\nYou can get this by doing (-o) and specifying no edge (-n)"
 
