@@ -86,40 +86,36 @@ def get_conflict_struct(conflicts):
 	return HASH
 	
 '''
-Take in the conflict structure, the clade of interest, and the Relationships held
-For the name of interest find if it is in the conflict structure, then if it is
-Check if any of it's conflicts are in the final rels
+Take in an ever expanding array of conflicts and see if one should be added or no
+add if no intersection, add if the intersection is 100%
 '''
-def FindKeeper(conflict,name,FinalRels):
+def FindKeeper(name,FinalRels):
 	
-	array = []
-	test_array = []
-	test_array2 = []
-	test = ""
-	name = name.replace(",", " ")
+	#print name
+	match = ()
+	array = name.split(",")
+	match = set(array)
+	count = 0
+	
+
 	
 	for i in FinalRels:
-		i = i.replace(",", " ")
-		array.append(i)
-	match = set(array)
-
-	
-	#parse existing conflicts to see if they are in final rels
-	for j in conflict[name]:
-
-		for i in FinalRels:
 		
-			test_array = i.split(",")
-			if len(test_array) == len(j):
-
-				if len(match.intersection(j)) == 0:
-					test = "true"
-	
-	if test == "true":
-		return "hit"
+		array2 = i.split(",")
+		#Check if no name the array
+		if len(match.intersection(array2)) == 0:
+			count += 1
+		#Check if the name is 100% in the array
+		if len(match.intersection(array2)) == len(array2):
+			count += 1
+		if len(match.intersection(array2)) == len(array):
+			count += 1
+		
+	if count == (len(FinalRels)):
+		return "true"
 	else:
-		return "no_hit"
-			
+		return "false"
+	
 '''			
 			for i in FinalRels:
 				array = i.split(",")

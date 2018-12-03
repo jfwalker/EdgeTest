@@ -80,27 +80,31 @@ def main(arguments=None):
 			sorted_arrays = file_utils.sort_hash(best_hash)
 			names = sorted_arrays[0]
 			values = sorted_arrays[1]
-			
 			#Has an array of all names and a newick that's just a giant polytomy
 			names_array,polytomy_newick = Summary_utils.get_all_names_array(names)
 			
 			#Take in the conflict file, all conflicts is now a hash with an array of cons
+			#I don't think this will be used here but can be in the future so I'm leaving
+			#it
 			all_conflicts = Summary_utils.get_conflict_struct(args.conflict_file)
 			
-			FinalRels.append(polytomy_newick)
+			#FinalRels.append(polytomy_newick)
 			#need to go through sorted array then accept and reject relationships
 			for i in range(0,len(names)):
+				
 				if names[i] == "NoRel":
 					the = "holder"
 				elif names[i] == "GeneName":
 					the = "holder"
 				else:
 					#Take this and check if it exists
-					Match = Summary_utils.FindKeeper(all_conflicts,names[i],FinalRels)
-					if Match == "no_hit":
+					add = Summary_utils.FindKeeper(names[i],FinalRels)
+					if add == "true":
 						FinalRels.append(names[i])
+			print "(" + polytomy_newick + ");"
 			for i in FinalRels:
-				print "(" + i + ");"	
+				print "(" + i + ");"
+					
 			
 		else:
 			print "ERROR!!!!!!! ( ﾟ Дﾟ)\nThis requires the conflict (-c option) output of Wolverine.py.\nYou can get this by doing (-o) and specifying no edge (-n)"
