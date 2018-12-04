@@ -118,11 +118,20 @@ def FindKeeper(name,FinalRels):
 
 
 
-def calculate_entropy(names_array,concordance_file,conflict_file):
-	print "Calculating entropy"
+def calculate_entropy(names_array,concordance_hash,conflict_hash):
+	
+	
+	array = []
+	HASH = {}
+	#names_array should match the other files in the order
+	for i in names_array:
 
-
-
+		array.append(len(concordance_hash[i]))
+		for j in conflict_hash[i]:
+			print j
+			
+			
+			
 '''			
 			for i in FinalRels:
 				array = i.split(",")
