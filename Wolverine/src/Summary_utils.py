@@ -115,7 +115,14 @@ def FindKeeper(name,FinalRels):
 		return "true"
 	else:
 		return "false"
-	
+
+
+
+def calculate_entropy(names_array,concordance_file,conflict_file):
+	print "Calculating entropy"
+
+
+
 '''			
 			for i in FinalRels:
 				array = i.split(",")

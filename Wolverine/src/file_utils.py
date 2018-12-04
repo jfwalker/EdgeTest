@@ -29,11 +29,41 @@ def sort_hash(best_hash):
 
 def get_concordance_file(concord):
 
+	HASH = {}
+	tree_name = ""
+	names = []
 	for i in concord:
-		print i.strip("\n")
+
+		i = i.strip("\n")
+		if i[0:5] == "Clade":
+			array = i.split(":")
+			array2 = array[1].split("|")
+			temp = array2[0][1:-1]
+			names.append(temp)
+			HASH[temp] = []
+		if i[0] == "\t":
+			array3 = i.split(":")
+			array22 = array3[0].split(" ")
+			tree_name = array22[1] + " " + array22[2]
+			HASH[temp].append(tree_name)
+	return HASH,names
 		
 		
 def get_conflict_file(con):
 
+	HASH = {}
+	names = []
 	for i in con:
-		i.strip("\n")
+		i = i.strip("\n")
+		if i[0:5] == "Clade":
+			array = i.split(":")
+			array2 = array[1].split("|")
+			temp = array2[0][1:-1]
+			HASH[temp] = []
+			names.append(temp)
+		if i[0] == "\t":
+			array3 = i.split(":")
+			array22 = array3[1].split("|")
+			temp2 = array22[0][1:-1].split(" ")
+			HASH[temp].append(temp2)
+	return HASH,names
