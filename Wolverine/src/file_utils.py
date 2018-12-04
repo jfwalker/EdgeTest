@@ -26,4 +26,14 @@ def sort_hash(best_hash):
 	both_array.append(name_array[::-1])
 	both_array.append(value_array[::-1])
 	return both_array	
-	
+
+def get_concordance_file(concord):
+
+	for i in concord:
+		print i.strip("\n")
+		
+		
+def get_conflict_file(con):
+
+	for i in con:
+		i.strip("\n")
