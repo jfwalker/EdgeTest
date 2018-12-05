@@ -3,6 +3,7 @@ import sys,os
 import subprocess
 import tree_utils, tree_reader
 import bipart_utils
+import math
 
 '''
 Takes in the array of array like file and returns a hash with the summarize
@@ -121,15 +122,48 @@ def FindKeeper(name,FinalRels):
 def calculate_entropy(names_array,concordance_hash,conflict_hash):
 	
 	
-	array = []
+	#Maybe return some structure that does like clade freq ICA
+	
 	HASH = {}
 	#names_array should match the other files in the order
 	for i in names_array:
-
+		array = []
+		HASH = {}
 		array.append(len(concordance_hash[i]))
+		focal = "largest"
 		for j in conflict_hash[i]:
-			print j
 			
+			temp = ""
+			for k in j:
+				temp += k + " "
+			temp = temp[0:-1]
+			if temp in HASH:
+				HASH[temp] += 1
+			else:
+				HASH[temp] = 1
+		#array contains first the largest conflict and next the total conflicts
+		for k in HASH:
+			array.append(HASH[k])
+			#get wether focal clade is largest
+			if array[0] < HASH[k]:
+				focal = "not_largest"
+			
+		#math.log(count_of_bipart/total_trees)
+		if focal == "largest":
+			x = 1.0
+		else:
+			x = -1.0
+
+		if 1 == len(array):
+			x += 0.0
+		else:	
+			for k in array:
+				freq = float(k) / float(len(array))
+				size_array = float(len(array))
+				x += (freq * math.log(freq, size_array))
+		print i.strip("\n") + "\t" + str(array[0]) + "\t" + str(len(array)) + "\t" + str(x)
+		#print i
+		#print array	
 			
 			
 '''			
