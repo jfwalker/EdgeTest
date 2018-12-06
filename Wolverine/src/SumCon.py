@@ -47,6 +47,10 @@ def main(arguments=None):
 	args = parser.parse_args(arguments)
 	arguments = sys.argv[1:]
 	likelihood_file = []
+	
+	if args.output_file:
+		outf = open(args.output_file, "w")
+	
 	#Get the info likelihood file
 	
 	#Take in the like file, future stuff for this
@@ -72,7 +76,13 @@ def main(arguments=None):
 	
 	if args.calc_entropy:
 		if args.concordance_file and args.conflict_file:
-			Summary_utils.calculate_entropy(names_array,concordance_hash,conflict_hash)
+			ICA_sum_array = Summary_utils.calculate_entropy(names_array,concordance_hash,conflict_hash)
+			for i in ICA_sum_array:
+				if args.output_file:
+					outf.write(i + "\n")
+				else:
+					print i
+			
 		else:
 			print "You need the concordance and the conflict files from Wolverine.py"
 	

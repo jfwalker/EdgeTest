@@ -117,16 +117,23 @@ def FindKeeper(name,FinalRels):
 	else:
 		return "false"
 
-
-
+'''
+This calculates entropy a la modification to Shannon 1948 by Salichos 2014
+This doesn't count trees as the conflict it counts biparts, aka can have more than
+one conflicting bipart
+'''
 def calculate_entropy(names_array,concordance_hash,conflict_hash):
 	
 	
 	#Maybe return some structure that does like clade freq ICA
+	results_array = []
 	
 	HASH = {}
+	count = 1
 	#names_array should match the other files in the order
 	for i in names_array:
+	
+		results = ""
 		array = []
 		HASH = {}
 		array.append(len(concordance_hash[i]))
@@ -158,10 +165,13 @@ def calculate_entropy(names_array,concordance_hash,conflict_hash):
 			x += 0.0
 		else:	
 			for k in array:
-				freq = float(k) / float(len(array))
-				size_array = float(len(array))
+				freq = float(k) / float(sum(array))
+				size_array = float(sum(array))
 				x += (freq * math.log(freq, size_array))
-		print i.strip("\n") + "\t" + str(array[0]) + "\t" + str(len(array)) + "\t" + str(x)
+		results += "Clade " + str(count) + ":\t" + i.strip("\n") + "\t" + str(array[0]) + "\t" + str(sum(array)) + "\t" + str(x)
+		count += 1
+		results_array.append(results)
+	return results_array
 		#print i
 		#print array	
 			
