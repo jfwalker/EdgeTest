@@ -52,7 +52,7 @@ def estimate_tree_raxml(TreeProg, OutFolder, verbosity):
 		row = gene
 		#Get with no constraint
 		cmd = ""
-		cmd = TreeProg + " --msa " + i + " --model GTR+G --threads 4 --prefix " + gene + " | grep \"Final LogLikelihood:\" "
+		cmd = TreeProg + " --msa " + i + "--force --model GTR+G --threads 4 --prefix " + gene + " | grep \"Final LogLikelihood:\" "
 		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 		t = p.communicate()[0].split(":")
 		row = row + "\t" + t[1].strip("\n").strip(" ")
@@ -69,7 +69,7 @@ def estimate_tree_raxml(TreeProg, OutFolder, verbosity):
 			const_name = const_name[2]
 			prefix = gene + "_" + const_name
 			cmd = ""
-			cmd = TreeProg + " -msa " + i + " --model GTR+G --threads 4 --tree-constraint " + x + " --prefix " + prefix + " | grep \"Final LogLikelihood:\" "
+			cmd = TreeProg + " -msa " + i + "--force --model GTR+G --threads 4 --tree-constraint " + x + " --prefix " + prefix + " | grep \"Final LogLikelihood:\" "
 			p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 			t = p.communicate()[0].split(":")
 			cmd2 = ""
@@ -99,7 +99,7 @@ def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 	
 	cmd = ""
 	#cmd = raxml + " --msa " + input_gene + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
-	cmd = raxml + " --msa " + input_gene + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
+	cmd = raxml + " --msa " + input_gene + " --force --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
 
 	#print cmd
 	#os.system(cmd)
@@ -120,7 +120,7 @@ def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_n
 
 	cmd = ""
 	#cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
-	cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+	cmd = raxml + " --msa " + input_gene + " --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
 	#os.system(cmd)
 	#cmd = ""
 	#cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + str(count) + ".raxml.bestTree --lh-epsilon 0.00001 --blopt nr_safe" + " --model GTR+G --threads " + str(Threads) + " --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
@@ -230,7 +230,7 @@ def estimate_gene_trees(TreeProg,FastaHash,PartitionHash,Threads, OutFolder):
 		gene = i.split("/")
 		gene = gene[2]
 		row = gene
-		cmd = TreeProg + " --msa " + i + " --model GTR+G --threads " + str(Threads) + " --prefix " + gene
+		cmd = TreeProg + " --msa " + i + " --force --model GTR+G --threads " + str(Threads) + " --prefix " + gene
 		os.system(cmd)
 		cmd2 = ""
 		cmd2 = "mv " + gene + ".* " + OutFolder + "/EstimatedGeneTrees/ && rm ListofFastas.templist"
