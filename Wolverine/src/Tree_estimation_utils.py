@@ -99,7 +99,8 @@ def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 	
 	cmd = ""
 	#cmd = raxml + " --msa " + input_gene + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
-	cmd = raxml + " --msa " + input_gene + " --force --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
+        #Remove strict epsilon --lh-epsilon 0.000001
+	cmd = raxml + " --msa " + input_gene + " --force --blopt nr_safe --seed 12345 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
 
 	#print cmd
 	#os.system(cmd)
@@ -118,10 +119,12 @@ def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 
 def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_name_const):	
 
-	cmd = ""
+	#print gene_name
+        cmd = ""
 	#cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
-	cmd = raxml + " --msa " + input_gene + " --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
-	#os.system(cmd)
+	#cmd = raxml + " --msa " + input_gene + " --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+	cmd = raxml + " --msa " + input_gene + " --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+        #os.system(cmd)
 	#cmd = ""
 	#cmd = raxml + " --evaluate --msa " + input_gene + " --tree " + gene_name + str(count) + ".raxml.bestTree --lh-epsilon 0.00001 --blopt nr_safe" + " --model GTR+G --threads " + str(Threads) + " --prefix " + "revaluated_" + gene_name + str(count) + " | grep \"final logLikelihood:\""
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
