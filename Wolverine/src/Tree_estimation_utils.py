@@ -97,6 +97,7 @@ seems a bit screwy right now
 '''
 def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 	
+	#print gene_name	
 	cmd = ""
 	#cmd = raxml + " --msa " + input_gene + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
         #Remove strict epsilon --lh-epsilon 0.000001
@@ -109,18 +110,40 @@ def run_ng_no_const(raxml, Threads, gene_name, input_gene, OutFolder):
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split(":")
 	#print t
-	cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
-	os.system(cmd2)
+	if len(t) != 1:
+		cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
 	if len(t) == 1:
-		print "RAxML did not run, probably too many threads"
+		cmd = raxml + " --msa " + input_gene + " --redo --force --blopt nr_safe --seed 12356 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
+		print "Trying new seed 12356"
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+	else:
+		cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		cmd = raxml + " --msa " + input_gene + " --redo --force --blopt nr_safe --seed 12222 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + " | grep \"Final LogLikelihood:\""
+		print "Trying new seed 12222"
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+	else:
+		cmd2 = "mv *" + gene_name + ".* " + OutFolder + "/RaxmlLikelihoods/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		print "still not working"
+		print cmd
 		sys.exit()
 	#change to three for evaluate
-	return t[1].strip("\n").strip(" ")
+	#else:
+	#	return t[1].strip("\n").strip(" ")
 
 def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_name_const):	
 
 	#print gene_name
-        cmd = ""
+	cmd = ""
 	#cmd = raxml + " --msa " + input_gene + " --tree-constraint " + file_name_const + " --lh-epsilon 0.000001 --blopt nr_safe --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
 	#cmd = raxml + " --msa " + input_gene + " --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --lh-epsilon 0.000001 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
 	cmd = raxml + " --msa " + input_gene + " --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12345 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
@@ -130,12 +153,65 @@ def run_ng_const(raxml, Threads, gene_name, input_gene, OutFolder, count, file_n
 	p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
 	t = p.communicate()[0].split(":")
 	#print t
-	cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
-	os.system(cmd2)
+	if len(t) != 1:
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+		
 	if len(t) == 1:
-		print "RAxML did not run, probably too many threads"
+		cmd = raxml + " --msa " + input_gene + " --redo --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12356 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+		print "tried new seed 12356"
+	else:
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		cmd = raxml + " --msa " + input_gene + " --redo --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 11111 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		print "tried new seed 11111"
+	else:
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		cmd = raxml + " --msa " + input_gene + " --redo --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 12222 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+
+		print "tried new seed 12222"
+	else:
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		cmd = raxml + " --msa " + input_gene + " --redo --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 22224 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+		print "tried new seed 22224"
+	else:
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		cmd = raxml + " --msa " + input_gene + " --redo --force --tree-constraint " + file_name_const + " --blopt nr_safe --seed 32424 --model GTR+G --threads " + str(Threads) + " --prefix " + gene_name + str(count) + " | grep \"Final LogLikelihood:\""
+		p = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE)
+		t = p.communicate()[0].split(":")
+		print "tried new seed 32424"
+	else:
+		cmd2 = "mv *" + gene_name + str(count) + ".raxml.* " + OutFolder + "/RaxmlLikelihoods/ && mv " + gene_name + str(count) + ".tre " + OutFolder + "/ConstraintsUsed/"
+		os.system(cmd2)
+		return t[1].strip("\n").strip(" ")
+	if len(t) == 1:
+		print "still not working"
+		print cmd
 		sys.exit()
-	return t[1].strip("\n").strip(" ")
+	#else:
+	#	return t[1].strip("\n").strip(" ")
 
 '''
 Edge Estimation
@@ -181,6 +257,7 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 	no_const_likely = ""
 	const_likely = ""
 	for i in genes:
+
 		line = ""
 		input_gene_name = outfolder + "/Fastas/" + i + ".fa"
 		line += i
@@ -210,7 +287,7 @@ def estimate_edge(edge, all_species, genes, outfolder, raxml, Threads):
 					#print const_likely
 				edge_count += 1
 		print line
-		print "(☞ﾟヮﾟ)☞\t" + i
+		print "(☞ﾟヮﾟ)☞\t" + i + " " + str(count)
 		Likelihoods.write(line + "\n")	
 					
 		count += 1			
