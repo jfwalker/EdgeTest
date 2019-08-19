@@ -1,5 +1,5 @@
-# PHAIL
-PHylogenetic Analysis Into Lineages
+# EdgeTest
+Formely (PHylogenetic Analysis Into Lineages), name has been changed for developments in another repo
 
 Currently under significant developments (Although early EdgeTest.py is ready)
 There should be a lot more coming shortly
